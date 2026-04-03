@@ -69,27 +69,63 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist, isFavorite }: Ma
 
     markersRef.current = markers;
 
-    // Create clusterer
+    // Create clusterer with pie-chart colors per region
     clustererRef.current = new MarkerClusterer({
       map,
       markers,
       renderer: {
-        render: ({ count, position }) => {
+        render: ({ count, position, markers: clusterMarkers }) => {
+          // Count regions in this cluster
+          const regionCounts: Record<string, number> = {};
+          clusterMarkers?.forEach((m) => {
+            const title = (m as google.maps.Marker).getTitle() || "";
+            const artist = artists.find((a) => a.name === title);
+            if (artist) {
+              const color = REGIONS[artist.regionId].color;
+              regionCounts[color] = (regionCounts[color] || 0) + 1;
+            }
+          });
+
+          // Build SVG pie chart
+          const size = Math.min(56, 36 + Math.log2(count) * 6);
+          const r = size / 2;
+          const cx = r;
+          const cy = r;
+          const pr = r - 3; // pie radius (leave room for stroke)
+
+          let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">`;
+
+          // Draw pie slices
+          const colors = Object.entries(regionCounts);
+          if (colors.length === 1) {
+            svg += `<circle cx="${cx}" cy="${cy}" r="${pr}" fill="${colors[0][0]}" opacity="0.9"/>`;
+          } else {
+            let startAngle = -Math.PI / 2;
+            for (const [color, cnt] of colors) {
+              const sliceAngle = (cnt / count) * 2 * Math.PI;
+              const endAngle = startAngle + sliceAngle;
+              const x1 = cx + pr * Math.cos(startAngle);
+              const y1 = cy + pr * Math.sin(startAngle);
+              const x2 = cx + pr * Math.cos(endAngle);
+              const y2 = cy + pr * Math.sin(endAngle);
+              const largeArc = sliceAngle > Math.PI ? 1 : 0;
+              svg += `<path d="M${cx},${cy} L${x1},${y1} A${pr},${pr} 0 ${largeArc},1 ${x2},${y2} Z" fill="${color}" opacity="0.9"/>`;
+              startAngle = endAngle;
+            }
+          }
+
+          // White border + center circle with count
+          svg += `<circle cx="${cx}" cy="${cy}" r="${pr}" fill="none" stroke="white" stroke-width="2"/>`;
+          svg += `<circle cx="${cx}" cy="${cy}" r="${pr * 0.55}" fill="white" opacity="0.95"/>`;
+          svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" font-family="system-ui,sans-serif" font-weight="700" font-size="${size > 44 ? 14 : 12}" fill="#1c1917">${count}</text>`;
+          svg += `</svg>`;
+
           return new google.maps.Marker({
             position,
-            label: {
-              text: String(count),
-              color: "#fff",
-              fontWeight: "700",
-              fontSize: "13px",
-            },
             icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              fillColor: "#b45309",
-              fillOpacity: 0.9,
-              strokeColor: "#fff",
-              strokeWeight: 2,
-              scale: Math.min(18, 12 + Math.log2(count) * 3),
+              url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
+              scaledSize: new google.maps.Size(size, size),
+              anchor: new google.maps.Point(r, r),
             },
             zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
           });
