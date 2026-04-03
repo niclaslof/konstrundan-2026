@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Artist, REGIONS } from "@/lib/types";
 
 interface RoutePlannerProps {
@@ -10,52 +10,63 @@ interface RoutePlannerProps {
   onSelectArtist: (artist: Artist) => void;
 }
 
-function optimizeRoute(artists: Artist[]): Artist[] {
-  // Nearest-neighbor TSP approximation
-  if (artists.length <= 2) return artists;
+function optimizeRoute(artists: Artist[], startLat?: number, startLng?: number): Artist[] {
+  if (artists.length <= 1) return artists;
 
   const remaining = [...artists];
-  const route: Artist[] = [remaining.shift()!];
+  const route: Artist[] = [];
 
-  while (remaining.length > 0) {
-    const last = route[route.length - 1];
+  // If we have a start position, find nearest to that first
+  if (startLat !== undefined && startLng !== undefined) {
     let nearestIdx = 0;
     let nearestDist = Infinity;
-
     remaining.forEach((a, i) => {
-      const dist = Math.sqrt(
-        Math.pow(a.lat - last.lat, 2) + Math.pow(a.lng - last.lng, 2)
-      );
+      const dist = Math.sqrt(Math.pow(a.lat - startLat, 2) + Math.pow(a.lng - startLng, 2));
       if (dist < nearestDist) {
         nearestDist = dist;
         nearestIdx = i;
       }
     });
+    route.push(remaining.splice(nearestIdx, 1)[0]);
+  } else {
+    route.push(remaining.shift()!);
+  }
 
+  // Nearest-neighbor for rest
+  while (remaining.length > 0) {
+    const last = route[route.length - 1];
+    let nearestIdx = 0;
+    let nearestDist = Infinity;
+    remaining.forEach((a, i) => {
+      const dist = Math.sqrt(Math.pow(a.lat - last.lat, 2) + Math.pow(a.lng - last.lng, 2));
+      if (dist < nearestDist) {
+        nearestDist = dist;
+        nearestIdx = i;
+      }
+    });
     route.push(remaining.splice(nearestIdx, 1)[0]);
   }
 
   return route;
 }
 
-function calcDistance(a: Artist, b: Artist): number {
-  // Haversine approximation in km
+function calcDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6371;
-  const dLat = ((b.lat - a.lat) * Math.PI) / 180;
-  const dLng = ((b.lng - a.lng) * Math.PI) / 180;
-  const x =
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((a.lat * Math.PI) / 180) *
-      Math.cos((b.lat * Math.PI) / 180) *
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
       Math.sin(dLng / 2) *
       Math.sin(dLng / 2);
-  return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function totalDistance(route: Artist[]): number {
+function totalRouteDistance(route: Artist[]): number {
   let total = 0;
   for (let i = 0; i < route.length - 1; i++) {
-    total += calcDistance(route[i], route[i + 1]);
+    total += calcDistance(route[i].lat, route[i].lng, route[i + 1].lat, route[i + 1].lng);
   }
   return total;
 }
@@ -67,30 +78,55 @@ export default function RoutePlanner({
   onSelectArtist,
 }: RoutePlannerProps) {
   const [optimizedRoute, setOptimizedRoute] = useState<Artist[]>([]);
+  const [userPos, setUserPos] = useState<{ lat: number; lng: number } | null>(null);
+  const [gettingPos, setGettingPos] = useState(false);
+
+  // Reset when favorites change
+  useEffect(() => {
+    setOptimizedRoute([]);
+  }, [favorites.length]);
 
   const route = optimizedRoute.length > 0 ? optimizedRoute : favorites;
-  const distance = route.length > 1 ? totalDistance(route) : 0;
-  const driveTime = Math.round((distance / 50) * 60); // ~50 km/h average
+  const distance = route.length > 1 ? totalRouteDistance(route) : 0;
+  const driveTime = Math.round((distance / 50) * 60);
+
+  const handleGetPosition = () => {
+    setGettingPos(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setGettingPos(false);
+      },
+      () => setGettingPos(false),
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
 
   const handleOptimize = () => {
-    setOptimizedRoute(optimizeRoute(favorites));
+    setOptimizedRoute(optimizeRoute(favorites, userPos?.lat, userPos?.lng));
   };
 
   const handleOpenGoogleMaps = () => {
     if (route.length === 0) return;
 
-    const origin = `${route[0].lat},${route[0].lng}`;
-    const destination = `${route[route.length - 1].lat},${route[route.length - 1].lng}`;
-    const waypoints = route
-      .slice(1, -1)
-      .map((a) => `${a.lat},${a.lng}`)
-      .join("|");
+    // Use addresses for better Google Maps results
+    const encAddr = (a: Artist) => encodeURIComponent(`${a.address}, ${a.location}, Sverige`);
 
-    let url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-    if (waypoints) {
-      url += `&waypoints=${waypoints}`;
+    let url: string;
+    if (userPos) {
+      // Start from user position
+      const origin = `${userPos.lat},${userPos.lng}`;
+      const destination = encAddr(route[route.length - 1]);
+      const waypoints = route.slice(0, -1).map(encAddr).join("|");
+      url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=driving`;
+    } else {
+      const origin = encAddr(route[0]);
+      const destination = encAddr(route[route.length - 1]);
+      const waypoints = route.slice(1, -1).map(encAddr).join("|");
+      url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+      if (waypoints) url += `&waypoints=${waypoints}`;
+      url += `&travelmode=driving`;
     }
-    url += `&travelmode=driving`;
 
     window.open(url, "_blank");
   };
@@ -99,16 +135,11 @@ export default function RoutePlanner({
 
   return (
     <>
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 bg-black/40 z-[60]"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 bg-black/40 z-[60]" onClick={onClose} />
 
-      {/* Panel */}
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] max-w-[92vw] max-h-[80vh] bg-panel rounded-2xl shadow-2xl z-[61] overflow-hidden">
+      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] max-w-[95vw] max-h-[85vh] bg-panel rounded-2xl shadow-2xl z-[61] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-ink text-paper px-5 py-4 flex items-center justify-between">
+        <div className="bg-ink text-paper px-5 py-4 flex items-center justify-between shrink-0">
           <div>
             <h2 className="font-[family-name:var(--font-playfair)] text-lg font-bold">
               Planera din runda
@@ -117,20 +148,41 @@ export default function RoutePlanner({
               {favorites.length} konstnärer valda
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="text-warm hover:text-paper text-xl cursor-pointer"
-          >
+          <button onClick={onClose} className="text-warm hover:text-paper text-xl cursor-pointer">
             ✕
           </button>
         </div>
 
+        {/* Start position */}
+        <div className="px-5 py-3 bg-stone-50 border-b border-stone-200 shrink-0">
+          <p className="text-xs text-warm font-semibold uppercase mb-2">Startpunkt</p>
+          {userPos ? (
+            <div className="flex items-center gap-2">
+              <span className="text-green-600 text-sm">📍 Din position hämtad</span>
+              <button
+                onClick={() => setUserPos(null)}
+                className="text-xs text-warm hover:text-ink cursor-pointer"
+              >
+                ✕ Rensa
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleGetPosition}
+              disabled={gettingPos}
+              className="px-3 py-1.5 rounded-lg bg-white border border-stone-300 text-sm font-medium cursor-pointer hover:border-accent transition-colors disabled:opacity-50"
+            >
+              {gettingPos ? "⏳ Hämtar position..." : "📍 Använd min position som start"}
+            </button>
+          )}
+        </div>
+
         {/* Stats */}
         {route.length > 1 && (
-          <div className="flex gap-4 px-5 py-3 bg-tag-bg border-b border-stone-200">
+          <div className="flex gap-4 px-5 py-3 bg-tag-bg border-b border-stone-200 shrink-0">
             <div className="text-center">
               <div className="text-lg font-bold text-accent">{distance.toFixed(0)} km</div>
-              <div className="text-[0.6rem] text-warm uppercase">Total sträcka</div>
+              <div className="text-[0.6rem] text-warm uppercase">Sträcka</div>
             </div>
             <div className="text-center">
               <div className="text-lg font-bold text-accent">~{driveTime} min</div>
@@ -144,7 +196,7 @@ export default function RoutePlanner({
         )}
 
         {/* Route list */}
-        <div className="overflow-y-auto max-h-[40vh] px-2 py-2">
+        <div className="overflow-y-auto flex-1 px-2 py-2">
           {route.map((artist, i) => (
             <div
               key={`${artist.regionId}-${artist.id}`}
@@ -162,13 +214,13 @@ export default function RoutePlanner({
                   <div className="w-0.5 h-4 bg-stone-300 mt-1" />
                 )}
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="font-semibold text-sm truncate">{artist.name}</div>
-                <div className="text-xs text-warm truncate">{artist.location}</div>
+                <div className="text-xs text-warm truncate">{artist.location} · {artist.technique}</div>
               </div>
               {i > 0 && (
                 <div className="ml-auto text-xs text-warm shrink-0">
-                  {calcDistance(route[i - 1], artist).toFixed(1)} km
+                  {calcDistance(route[i - 1].lat, route[i - 1].lng, artist.lat, artist.lng).toFixed(1)} km
                 </div>
               )}
             </div>
@@ -176,7 +228,7 @@ export default function RoutePlanner({
         </div>
 
         {/* Actions */}
-        <div className="px-5 py-4 border-t border-stone-200 flex flex-col gap-2">
+        <div className="px-5 py-4 border-t border-stone-200 flex flex-col gap-2 shrink-0">
           <button
             onClick={handleOptimize}
             className="w-full py-2.5 rounded-lg bg-stone-100 text-ink text-sm font-semibold hover:bg-stone-200 transition-colors cursor-pointer"
