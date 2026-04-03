@@ -99,6 +99,10 @@ dev:
 build:
 	$(NPM) run build
 
+deploy:
+	git add -A && git commit -m "Deploy" --allow-empty && git push
+	npx vercel --prod --yes
+
 # ──────────────────────────────────────────────
 # Data Pipeline – Scraping
 # ──────────────────────────────────────────────
