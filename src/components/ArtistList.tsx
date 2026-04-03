@@ -1,0 +1,72 @@
+"use client";
+
+import { Artist } from "@/lib/types";
+
+interface ArtistListProps {
+  artists: Artist[];
+  isOpen: boolean;
+  onClose: () => void;
+  onSelect: (artist: Artist) => void;
+}
+
+export default function ArtistList({
+  artists,
+  isOpen,
+  onClose,
+  onSelect,
+}: ArtistListProps) {
+  return (
+    <>
+      {/* Side panel */}
+      <div
+        className={`fixed left-0 top-[96px] bottom-0 w-72 md:w-80 bg-panel z-[55] overflow-y-auto transition-transform duration-300 border-r border-stone-200 shadow-[4px_0_16px_rgba(0,0,0,0.1)] ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Header */}
+        <div className="sticky top-0 z-10 bg-ink text-paper px-4 py-3 flex items-center justify-between">
+          <h3 className="font-semibold text-sm">
+            Alla konstnärer ({artists.length})
+          </h3>
+          <button
+            onClick={onClose}
+            className="text-warm hover:text-paper text-lg cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* List */}
+        <div>
+          {artists
+            .sort((a, b) => a.id - b.id)
+            .map((artist) => (
+              <div
+                key={artist.id}
+                onClick={() => {
+                  onSelect(artist);
+                  onClose();
+                }}
+                className="flex items-center gap-3 px-4 py-2.5 border-b border-stone-100 cursor-pointer hover:bg-tag-bg transition-colors"
+              >
+                <span className="w-7 h-7 rounded-full bg-accent text-white flex items-center justify-center text-[0.6rem] font-bold shrink-0">
+                  {artist.id}
+                </span>
+                <div className="min-w-0">
+                  <div className="font-semibold text-xs text-ink truncate">
+                    {artist.name}
+                    {artist.isNew && (
+                      <span className="ml-1.5 text-new-text">★</span>
+                    )}
+                  </div>
+                  <div className="text-[0.65rem] text-warm truncate">
+                    {artist.technique}
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+    </>
+  );
+}

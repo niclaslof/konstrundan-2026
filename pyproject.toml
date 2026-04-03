@@ -1,0 +1,22 @@
+[project]
+name = "konstrundan-2026-scripts"
+version = "1.0.0"
+description = "Data pipeline scripts for Konstrundan 2026 – geocoding, scraping, PDF extraction"
+requires-python = ">=3.11"
+
+dependencies = [
+    "pdfplumber>=0.11.0",
+    "requests>=2.31.0",
+    "Pillow>=10.0.0",
+    "beautifulsoup4>=4.12.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.4.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
