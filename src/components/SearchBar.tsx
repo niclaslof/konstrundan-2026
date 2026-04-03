@@ -29,33 +29,38 @@ export default function SearchBar({
   onToggleFavorites,
   favoriteCount,
 }: SearchBarProps) {
+  const btnBase =
+    "px-2.5 py-1 rounded-full text-[0.65rem] font-semibold transition-all cursor-pointer whitespace-nowrap border";
+  const btnActive = "text-white";
+  const btnInactive = "bg-white hover:opacity-80";
+
   return (
-    <div className="fixed top-[52px] left-0 right-0 z-40 bg-paper/95 backdrop-blur-sm border-b border-stone-200 px-2 py-1.5 md:px-6 md:py-2">
-      <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+    <div className="fixed top-[44px] md:top-[48px] left-0 right-0 z-40 bg-paper/95 backdrop-blur-sm border-b border-stone-200">
+      <div className="flex items-center gap-1.5 px-2 py-1.5 md:px-5 md:py-2 overflow-x-auto scrollbar-none">
         {/* Search */}
         <input
           type="text"
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
-          placeholder="Sök konstnär, ort..."
-          className="px-2.5 py-1.5 md:py-2 rounded-lg border border-stone-300 text-sm w-36 md:w-56 bg-white outline-none focus:border-accent transition-colors"
+          placeholder="Sök..."
+          className="px-2.5 py-1 md:py-1.5 rounded-full border border-stone-300 text-[0.7rem] md:text-xs w-24 md:w-48 bg-white outline-none focus:border-accent focus:ring-1 focus:ring-accent/20 transition-all shrink-0"
         />
 
-        {/* Favorites filter */}
+        {/* Favorites */}
         {favoriteCount > 0 && (
           <button
             onClick={onToggleFavorites}
-            className={`px-2 py-1 md:px-3 md:py-1.5 rounded-full border text-[0.65rem] md:text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+            className={`${btnBase} ${
               showFavoritesOnly
-                ? "bg-amber-500 text-white border-amber-500"
-                : "bg-white border-amber-400 text-amber-600 hover:bg-amber-50"
+                ? `${btnActive} bg-amber-500 border-amber-500`
+                : `${btnInactive} border-amber-300 text-amber-600`
             }`}
           >
             ♥ {favoriteCount}
           </button>
         )}
 
-        {/* Region filter buttons */}
+        {/* Regions */}
         {availableRegions.map((rid) => {
           const region = REGIONS[rid];
           const isActive = activeRegions.includes(rid);
@@ -63,11 +68,11 @@ export default function SearchBar({
             <button
               key={rid}
               onClick={() => onRegionToggle(rid)}
-              className="px-2 py-1 md:px-3 md:py-1.5 rounded-full border text-[0.65rem] md:text-xs font-semibold transition-all cursor-pointer whitespace-nowrap"
+              className={`${btnBase} ${isActive ? btnActive : btnInactive}`}
               style={{
-                backgroundColor: isActive ? region.color : "#fff",
-                color: isActive ? "#fff" : region.color,
+                backgroundColor: isActive ? region.color : undefined,
                 borderColor: region.color,
+                color: isActive ? "#fff" : region.color,
               }}
               title={region.name}
             >
@@ -76,19 +81,19 @@ export default function SearchBar({
           );
         })}
 
-        {/* Separator */}
-        <div className="w-px h-5 bg-stone-300 mx-1 hidden md:block" />
+        {/* Divider */}
+        <div className="w-px h-4 bg-stone-300 shrink-0 hidden md:block" />
 
-        {/* Technique filters – multi-select */}
+        {/* Techniques */}
         <button
           onClick={onClearFilters}
-          className={`px-2 py-1 md:px-3 md:py-1.5 rounded-full border text-[0.65rem] md:text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+          className={`${btnBase} ${
             activeFilters.length === 0
-              ? "bg-ink text-white border-ink"
-              : "bg-white border-stone-300 hover:border-ink hover:text-ink"
+              ? `${btnActive} bg-stone-800 border-stone-800`
+              : `${btnInactive} border-stone-300 text-stone-600`
           }`}
         >
-          Alla tekniker
+          Alla
         </button>
         {techniques.map((t) => {
           const isActive = activeFilters.includes(t as TechniqueFilter);
@@ -96,10 +101,10 @@ export default function SearchBar({
             <button
               key={t}
               onClick={() => onFilterToggle(t as TechniqueFilter)}
-              className={`px-2 py-1 md:px-3 md:py-1.5 rounded-full border text-[0.65rem] md:text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              className={`${btnBase} ${
                 isActive
-                  ? "bg-ink text-white border-ink"
-                  : "bg-white border-stone-300 hover:border-ink hover:text-ink"
+                  ? `${btnActive} bg-stone-800 border-stone-800`
+                  : `${btnInactive} border-stone-300 text-stone-600`
               }`}
             >
               {t}

@@ -186,16 +186,16 @@ function MapTypeToggle() {
   return (
     <button
       onClick={toggle}
-      className="fixed top-[104px] right-3 z-10 px-3 py-2 rounded-lg bg-white shadow-lg border border-stone-200 text-xs font-semibold cursor-pointer hover:bg-stone-50 transition-colors"
+      className="fixed top-[80px] md:top-[88px] right-2 z-10 px-2.5 py-1.5 rounded-full bg-white/90 backdrop-blur-sm shadow-md text-[0.65rem] font-medium cursor-pointer hover:bg-white transition-colors"
     >
-      {isSatellite ? "🗺️ Karta" : "🛰️ Satellit"}
+      {isSatellite ? "Karta" : "Satellit"}
     </button>
   );
 }
 
 function LoadingSpinner() {
   return (
-    <div className="fixed top-[96px] left-0 right-0 bottom-0 flex items-center justify-center bg-paper z-10">
+    <div className="fixed top-[76px] md:top-[82px] left-0 right-0 bottom-0 flex items-center justify-center bg-paper z-10">
       <div className="text-center">
         <div className="w-12 h-12 border-4 border-stone-200 border-t-accent rounded-full animate-spin mx-auto mb-4" />
         <p className="text-sm text-warm font-medium">Laddar kartan...</p>
@@ -210,7 +210,7 @@ export default function MapComponent({ artists, selectedArtist, onSelectArtist, 
 
   if (!apiKey) {
     return (
-      <div className="fixed top-[96px] left-0 right-0 bottom-0 flex items-center justify-center bg-stone-100">
+      <div className="fixed top-[76px] md:top-[82px] left-0 right-0 bottom-0 flex items-center justify-center bg-stone-100">
         <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md">
           <p className="text-lg font-semibold mb-2">Google Maps API-nyckel saknas</p>
           <p className="text-sm text-warm">
@@ -225,7 +225,7 @@ export default function MapComponent({ artists, selectedArtist, onSelectArtist, 
   return (
     <>
       {!mapLoaded && <LoadingSpinner />}
-      <div className="fixed top-[96px] left-0 right-0 bottom-0 z-0">
+      <div className="fixed top-[76px] md:top-[82px] left-0 right-0 bottom-0 z-0">
         <APIProvider apiKey={apiKey} onLoad={() => setMapLoaded(true)}>
           <GoogleMap
             defaultCenter={{ lat: 55.75, lng: 13.50 }}

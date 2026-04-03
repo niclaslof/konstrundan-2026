@@ -152,30 +152,20 @@ export default function Home() {
         }}
       />
 
-      {/* Bottom bar */}
-      <div className="fixed bottom-4 left-3 z-50 flex gap-2">
+      {/* Bottom bar – clean, minimal */}
+      <div className="fixed bottom-4 left-3 right-3 z-50 flex gap-2 justify-center pointer-events-none">
         <button
           onClick={() => setListOpen(!listOpen)}
-          className="px-3 py-2.5 md:px-4 rounded-xl bg-ink text-paper text-xs md:text-sm font-semibold shadow-[0_3px_12px_rgba(0,0,0,0.25)] hover:bg-accent transition-colors cursor-pointer flex items-center gap-1.5"
+          className="pointer-events-auto px-4 py-2 rounded-full bg-ink/90 backdrop-blur-sm text-paper text-xs font-medium shadow-lg hover:bg-ink transition-colors cursor-pointer"
         >
-          📋 Lista
-        </button>
-        <button
-          onClick={handleNearMe}
-          className={`px-3 py-2.5 md:px-4 rounded-xl text-xs md:text-sm font-semibold shadow-[0_3px_12px_rgba(0,0,0,0.25)] transition-colors cursor-pointer flex items-center gap-1.5 ${
-            sortByDistance
-              ? "bg-accent text-paper"
-              : "bg-ink text-paper hover:bg-accent"
-          }`}
-        >
-          {geoLoading ? "⏳" : "📍"} Nära mig
+          Lista ({filtered.length})
         </button>
         {favoriteCount > 0 && (
           <button
             onClick={() => setRouteOpen(true)}
-            className="px-3 py-2.5 md:px-4 rounded-xl bg-amber-600 text-paper text-xs md:text-sm font-semibold shadow-[0_3px_12px_rgba(0,0,0,0.25)] hover:bg-amber-700 transition-colors cursor-pointer flex items-center gap-1.5"
+            className="pointer-events-auto px-4 py-2 rounded-full bg-accent/90 backdrop-blur-sm text-paper text-xs font-medium shadow-lg hover:bg-accent transition-colors cursor-pointer"
           >
-            🧭 Planera rutt ({favoriteCount})
+            Planera rutt ♥ {favoriteCount}
           </button>
         )}
       </div>
