@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Artist, REGIONS } from "@/lib/types";
 
 interface ArtistPanelProps {
@@ -51,12 +52,14 @@ export default function ArtistPanel({
       >
         {/* Header with artist image */}
         <div className="relative h-56 bg-gradient-to-br from-tag-bg via-amber-200 to-accent-light flex items-center justify-center overflow-hidden">
-          <img
+          <Image
             src={`/images/artists/${artist.id}.jpg`}
             alt={artist.name}
+            width={420}
+            height={224}
             className="w-full h-full object-cover"
+            loading="lazy"
             onError={(e) => {
-              // Fallback to number if image doesn't exist
               (e.target as HTMLImageElement).style.display = "none";
               (e.target as HTMLImageElement).parentElement!.classList.add("fallback-active");
             }}
