@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konstrundan 2026 – Östra Skåne</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#1c1917;--paper:#faf8f5;--accent:#b45309;--warm:#78716c;--panel:#fefdfb;--tag-bg:#fef3c7;--tag-text:#92400e}
+body{font-family:Georgia,'Times New Roman',serif;background:var(--ink);overflow:hidden;height:100vh}
+.header{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--ink);color:var(--paper);padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--accent)}
+.header h1{font-size:1.25rem;font-weight:700}
+.header h1 span{color:var(--accent)}
+.header-sub{font-family:system-ui,sans-serif;font-size:.65rem;color:var(--warm);letter-spacing:.12em;text-transform:uppercase}
+.header-right{margin-left:auto;font-family:system-ui,sans-serif;font-size:.75rem;color:var(--warm)}
+.header-right strong{color:var(--accent);font-size:1rem}
+.search-bar{position:fixed;top:52px;left:0;right:0;z-index:900;background:rgba(250,248,245,.95);backdrop-filter:blur(6px);padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #e7e5e4}
+.search-input{padding:8px 12px;border-radius:8px;border:1px solid #d6d3d1;font-size:.85rem;width:180px;background:#fff;font-family:system-ui,sans-serif;outline:none}
+.search-input:focus{border-color:var(--accent)}
+.fbtn{padding:5px 11px;border-radius:16px;border:1px solid #d6d3d1;font-size:.7rem;font-weight:600;cursor:pointer;background:#fff;font-family:system-ui,sans-serif;white-space:nowrap;transition:all .15s}
+.fbtn:hover{border-color:var(--accent);color:var(--accent)}
+.fbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+#map{position:fixed;top:96px;left:0;right:0;bottom:0;z-index:1}
+.marker-cluster-small,.marker-cluster-medium,.marker-cluster-large{background:rgba(180,83,9,.2)!important}
+.marker-cluster-small div,.marker-cluster-medium div,.marker-cluster-large div{background:var(--accent)!important;color:#fff!important;font-family:system-ui,sans-serif;font-weight:700}
+.pin{width:28px;height:28px;border-radius:50% 50% 50% 0;background:var(--accent);transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid #fff;cursor:pointer;transition:transform .15s}
+.pin:hover{transform:rotate(-45deg) scale(1.2)}
+.pin span{transform:rotate(45deg);color:#fff;font-weight:700;font-size:9px;font-family:system-ui,sans-serif}
+.pin.hall{background:#991b1b}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:2000;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.open{opacity:1;pointer-events:all}
+.panel{position:fixed;right:-440px;top:0;bottom:0;width:420px;max-width:95vw;background:var(--panel);z-index:2001;transition:right .35s cubic-bezier(.22,1,.36,1);overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.2)}
+.panel.open{right:0}
+.panel-top{height:110px;background:linear-gradient(135deg,#fef3c7,#fde68a,#f59e0b);display:flex;align-items:center;justify-content:center;position:relative}
+.panel-top-num{font-size:3rem;font-weight:700;color:rgba(255,255,255,.6)}
+.panel-x{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.4);color:#fff;border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.panel-x:hover{background:rgba(0,0,0,.7)}
+.pbody{padding:20px 22px 32px;font-family:system-ui,sans-serif}
+.ptags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.ptag{font-size:.6rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:12px;background:var(--tag-bg);color:var(--tag-text)}
+.ptag.new{background:#dcfce7;color:#166534}
+.pname{font-family:Georgia,serif;font-size:1.4rem;line-height:1.25;margin-bottom:4px}
+.ptech{font-size:.82rem;color:var(--accent);font-weight:500;margin-bottom:14px}
+.pdiv{width:36px;height:3px;background:var(--accent);margin-bottom:14px;border-radius:2px}
+.prows{display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.prow{display:flex;gap:8px;font-size:.82rem;align-items:flex-start}
+.prow-i{flex-shrink:0;width:18px;text-align:center}
+.prow-l{color:var(--warm);font-weight:600;min-width:52px}
+.prow-v{color:var(--ink);word-break:break-word}
+.prow-v a{color:var(--accent);text-decoration:none}
+.prow-v a:hover{text-decoration:underline}
+.pbtns{display:flex;gap:8px;flex-wrap:wrap}
+.pbtn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:8px;font-size:.78rem;font-weight:600;text-decoration:none;border:none;cursor:pointer;font-family:system-ui,sans-serif}
+.pbtn-a{background:var(--ink);color:var(--paper)}
+.pbtn-a:hover{background:var(--accent)}
+.pbtn-b{background:#f5f5f4;color:var(--ink);border:1px solid #e7e5e4}
+.pbtn-b:hover{border-color:var(--accent);color:var(--accent)}
+.side{position:fixed;left:0;top:96px;bottom:0;width:270px;background:var(--panel);z-index:800;overflow-y:auto;transform:translateX(-100%);transition:transform .3s;border-right:1px solid #e7e5e4;box-shadow:4px 0 16px rgba(0,0,0,.1)}
+.side.open{transform:translateX(0)}
+.side-head{padding:12px 14px;background:var(--ink);color:var(--paper);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:2}
+.side-head h3{font-size:.95rem}
+.side-x{background:none;border:none;color:var(--warm);font-size:1.1rem;cursor:pointer}
+.si{padding:9px 14px;border-bottom:1px solid #f5f5f4;cursor:pointer;display:flex;gap:9px;align-items:center;font-family:system-ui,sans-serif;transition:background .1s}
+.si:hover{background:#fef3c7}
+.si-n{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0}
+.si-name{font-weight:600;font-size:.78rem;color:var(--ink)}
+.si-sub{font-size:.65rem;color:var(--warm)}
+.bbar{position:fixed;bottom:16px;left:12px;z-index:900;display:flex;gap:8px}
+.bbtn{padding:10px 16px;border-radius:10px;background:var(--ink);color:var(--paper);border:none;font-size:.78rem;font-weight:600;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.25);font-family:system-ui,sans-serif;display:flex;align-items:center;gap:6px}
+.bbtn:hover{background:var(--accent)}
+@media(max-width:600px){.search-input{width:130px}.panel{width:100vw}.side{width:100vw}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><h1>Konstrundan <span>'26</span></h1><span class="header-sub">Östra Skåne · 3–12 april</span></div>
+  <div class="header-right"><strong id="cnt">85</strong> konstnärer</div>
+</div>
+<div class="search-bar">
+  <input type="text" class="search-input" id="q" placeholder="Sök konstnär, ort, teknik...">
+  <button class="fbtn on" data-f="all">Alla</button>
+  <button class="fbtn" data-f="Måleri">Måleri</button>
+  <button class="fbtn" data-f="Keramik">Keramik</button>
+  <button class="fbtn" data-f="Skulptur">Skulptur</button>
+  <button class="fbtn" data-f="Grafik">Grafik</button>
+  <button class="fbtn" data-f="Textil">Textil</button>
+  <button class="fbtn" data-f="Glas">Glas</button>
+  <button class="fbtn" data-f="Foto">Foto</button>
+</div>
+<div id="map"></div>
+<div class="overlay" id="ov"></div>
+<div class="panel" id="pn">
+  <div class="panel-top"><span class="panel-top-num" id="pNum">#1</span><button class="panel-x" id="pX">✕</button></div>
+  <div class="pbody">
+    <div class="ptags" id="pTags"></div>
+    <h2 class="pname" id="pName"></h2>
+    <div class="ptech" id="pTech"></div>
+    <div class="pdiv"></div>
+    <div class="prows" id="pRows"></div>
+    <div class="pbtns" id="pBtns"></div>
+  </div>
+</div>
+<div class="side" id="side">
+  <div class="side-head"><h3>Alla konstnärer</h3><button class="side-x" id="sX">✕</button></div>
+  <div id="sList"></div>
+</div>
+<div class="bbar"><button class="bbtn" id="bList">📋 Lista</button></div>
+<script>
+var A=[
+{id:1,n:"Tjörnedala konsthall",t:"SAMLINGSUTSTÄLLNING",a:"Tjörnedalavägen 40, Baskemölla",p:"0414-260 80",e:"info@oskg.se",w:"oskg.se",ig:"tjornedalakonsthall",la:55.4695,lo:14.1830,h:1},
+{id:2,n:"Jan-Bertil Andersson",t:"MÅLERI, TECKNING, OBJEKT",a:"Stjärnevägen 2, Gislöv",p:"0733-56 14 80",w:"janbertilandersson.se",la:55.408,lo:14.228},
+{id:4,n:"Elisabeth Ahlqvist",t:"GLAS, SKULPTUR, INSTALLATION",a:"Ingelstorps byväg 12, Ingelstorp",p:"0701-60 29 89",w:"ateljetuvegarden.se",ig:"elisabethahlqvist",la:55.468,lo:14.132},
+{id:5,n:"Åke Carlström",t:"MÅLERI, SKULPTUR",a:"Sockenvägen 509, Olseröd",p:"0733-90 60 35",w:"akecarlstrom.se",la:55.507,lo:14.064},
+{id:6,n:"Thomas Alexanderson",t:"KERAMIK",a:"Onslunda 2750",p:"0705-92 83 98",w:"ateljebrannorna.se",ig:"thomasalex8",la:55.580,lo:14.120},
+{id:7,n:"Kit Alexi",t:"MÅLERI, GRAFIK",a:"Andrarum 2202, Brösarp",p:"0767-65 52 98",w:"kitalexi.se",ig:"kitalexi",la:55.720,lo:14.000},
+{id:8,n:"Bertil Arkrans",t:"SKULPTUR, MÅLERI, INSTALLATION",a:"Centralgatan 13, Tomelilla",p:"0738-49 01 49",w:"bertilarkrans.se",la:55.543,lo:13.955},
+{id:11,n:"Karin Bengtsson",t:"MÅLERI, GRAFIK",a:"Eliselundsvägen 39, Kivik",p:"0703-58 62 08",la:55.685,lo:14.235},
+{id:12,n:"Anna Agger",t:"TRÄ, GLAS",a:"Borrbyvägen 15, Skillinge",p:"0768-14 00 66",w:"agger.se",ig:"annaaggerdesign",la:55.478,lo:14.283},
+{id:13,n:"Håkan Berg",t:"GRAFIK, MÅLERI, SKULPTUR",a:"Sockenvägen 43, Maglehem",p:"0708-13 95 46",ig:"hakanbergmaglehem",la:55.762,lo:14.160},
+{id:16,n:"Martin Klein",t:"KOLLAGE, TECKNING, FOTOGRAFI",a:"Eljaröd 605, Brösarp",p:"0767-61 13 36",w:"martinkleinart.com",la:55.718,lo:14.082},
+{id:17,n:"Sara Klein",t:"KOLLAGE, TEXTIL",a:"Eljaröd 605, Brösarp",p:"0737-63 80 09",w:"saraklein.se",ig:"sarakleinnnn",la:55.718,lo:14.084},
+{id:18,n:"Elisabeth Palm",t:"KERAMIK",a:"Frans Löfströmsväg 19, Baskemölla",p:"0706-70 79 04",w:"elisabethpalm.se",ig:"keramikerelisabethkajsa",la:55.470,lo:14.177},
+{id:19,n:"Maria Brusewitz",t:"KERAMIK",a:"Blåtands väg 6, Kristianstad",p:"0736-92 36 29",w:"mariabrusewitz.se",la:56.030,lo:14.155},
+{id:20,n:"Maria Blombärg",t:"TEXTIL",a:"Yngsjövägen 1299, Yngsjö",p:"0703-54 17 75",w:"mariatextil.se",ig:"blombarg",la:55.927,lo:14.290},
+{id:21,n:"Håkan Blomkvist",t:"MÅLERI, BLANDTEKNIK",a:"Köpmangatan 28, Borrby",p:"0737-38 41 45",la:55.450,lo:14.190},
+{id:22,n:"Anne-Beth Borselius",t:"KERAMIK",a:"Vallby Söderväg 27, Hammenhög",p:"0768-45 57 32",w:"annebeth.se",ig:"eva_annebeth",la:55.432,lo:14.205},
+{id:23,n:"Ralf Borselius",t:"SKULPTUR, TECKNING",a:"Vallby Söderväg 27, Hammenhög",p:"0730-26 74 81",w:"ralfborselius.se",ig:"ralfborselius",la:55.432,lo:14.207},
+{id:25,n:"Maria Börjesson",t:"KERAMIK",a:"Näsbychaussén 10, Kristianstad",p:"0708-17 27 90",w:"berglund-borjesson.se",ig:"maria.borjessonkonst",la:56.028,lo:14.160},
+{id:26,n:"Iris van Hees",t:"TEXTIL, BIVAX",a:"Marias Strädde 7, Södra Mellby",p:"0701-50 61 18",ig:"studiovanhees",la:55.498,lo:14.197},
+{id:27,n:"Jan Dahlgren",t:"GRAFIK, MÅLERI, TECKNING",a:"Onslunda 2283",p:"0702-23 95 47",la:55.590,lo:14.095},
+{id:28,n:"Gabriella Dahlman",t:"FOTOGRAFI",a:"Gårdlösavägen 49, Smedstorp",p:"0737-54 52 51",w:"gabrielladahlman.se",ig:"gabrielladahlman",la:55.512,lo:14.110},
+{id:29,n:"Sven-Åke Ekberg",t:"SKULPTUR",a:"Dalenvägen 11, Kivik",p:"0702-47 22 25",w:"svenakeekberg.se",ig:"ekbergsvenake",la:55.687,lo:14.237},
+{id:30,n:"Lars Eliasson",t:"MÅLERI",a:"Hävdavägen 6, Skillinge",p:"0728-73 67 56",la:55.480,lo:14.285},
+{id:32,n:"Eddie Tjeno Ericsson",t:"MÅLERI, GRAFIK, EMALJ",a:"Gästgivarevägen 4, Skåne Tranås",p:"0706-36 83 32",w:"tjenomy.com",la:55.640,lo:14.050},
+{id:33,n:"Kerstin Eriksson",t:"MÅLERI, BLANDTEKNIK",a:"Mellby Byväg 7, Södra Mellby",p:"0762-10 05 55",w:"kerstineriksson.se",la:55.500,lo:14.200},
+{id:39,n:"Margareta Forslund",t:"TEXTIL, GLAS",a:"Viks stora väg 34",p:"0763-93 56 10",w:"margaretaforslund.com",ig:"margaretaforslundart",la:55.720,lo:14.100},
+{id:47,n:"Elna-Karin Helgesson",t:"KERAMIK",a:"Östra Kustvägen 912, Kåseberga",p:"0411-123 50",w:"elnakarin.se",ig:"elnakarinhelgesson",la:55.395,lo:14.080},
+{id:49,n:"Maria Hillfon",t:"MÅLERI, GRAFIK, TEXTIL",a:"Hölerödsvägen 142-30, Lövestad",p:"0730-38 91 26",w:"hillfon.com",la:55.574,lo:13.854},
+{id:52,n:"Bo Hultén",t:"MÅLERI",a:"Esperöds allé 14, Kivik",p:"0739-97 54 41",w:"esperodsherrgard.se/konst/",la:55.689,lo:14.232},
+{id:54,n:"Eva Härstedt",t:"MASKER",a:"S:t Olofsvägen 143, Almdala",p:"0767-99 17 39",w:"eva-masker.se",la:55.643,lo:14.140},
+{id:57,n:"Gittan Jönsson",t:"MÅLERI, GRAFIK, PORSLIN",a:"Pantaregatan 20, Brantevik",p:"0708-95 81 17",w:"gittanjonsson.se",ig:"gittan.jonsson.10",la:55.518,lo:14.345},
+{id:58,n:"Hasse Karlsson",t:"AKVARELL",a:"Möllebacken 10, Vitemölla",p:"0733-87 55 70",w:"hassekarlsson.se",ig:"hassekarlsson.akvarell",la:55.692,lo:14.197},
+{id:59,n:"Ia Karlsson",t:"MÅLERI",a:"Möllebacken 10, Vitemölla",p:"0708-17 31 20",w:"iakarlsson.se",ig:"ia_karlsson",la:55.692,lo:14.199},
+{id:66,n:"Mårten Landgren",t:"GRAFIK",a:"Malmövägen 99, Gärsnäs",p:"0703-84 95 19",la:55.487,lo:14.175},
+{id:67,n:"Jonas Larsen",t:"SKULPTUR, TECKNING, GLAS",a:"Gårdslösavägen 49, Smedstorp",p:"0705-30 81 38",w:"jonaslarsen.se",la:55.514,lo:14.112},
+{id:69,n:"Yvonne Larsson",t:"MÅLERI",a:"Grönhemsvägen 2, Gärsnäs",p:"0760-29 97 84",w:"yvonnelarsson.com",ig:"_yvonnelarsson_",la:55.489,lo:14.178},
+{id:71,n:"Ann-Margret Malmqvist",t:"GRAFIK, TECKNING, KOLLAGE",a:"Malmövägen 97A, Gärsnäs",p:"0708-50 88 84",w:"osterlenagar.se",ig:"annmargretmalmqvist",la:55.488,lo:14.173},
+{id:78,n:"Ann-Louise Månsson",t:"TEXTIL, TOVNING",a:"Örums Bygata 40, Löderup",p:"0721-98 38 07",w:"annlouise.nu",ig:"annlouise.nu",la:55.413,lo:14.108},
+{id:80,n:"Charlotte Elm Ravn",t:"BLANDTEKNIK",a:"Torget 5, Hammenhög",p:"0704-97 69 63",w:"charlotteelmravn.com",ig:"chravn",la:55.434,lo:14.203},
+{id:85,n:"Lena Pettersson",t:"BLANDTEKNIK",a:"Onslunda 2283",p:"0706-57 61 27",la:55.592,lo:14.097},
+{id:87,n:"Rose-Marie Qvarfordt",t:"MÅLERI",a:"Esperöds allé 14, Kivik",p:"0722-03 45 10",w:"esperodsherrgard.se/konst/",la:55.690,lo:14.230},
+{id:90,n:"Jonas Rooth",t:"GLAS",a:"Julebodavägen 94, Maglehem",p:"0709-55 59 53",w:"rooth.se",ig:"jonas.rooth.artglass",la:55.764,lo:14.162},
+{id:93,n:"Fredrik Jensner",t:"MÅLERI",a:"Tjärbyvägen 70, Sjöbo",p:"0701-48 56 90",ig:"fredrik_jensner",la:55.631,lo:13.533},
+{id:97,n:"My Svennberg",t:"MÅLERI, GRAFIK, EMALJ",a:"Gästgivarevägen 4, Skåne Tranås",p:"0733-50 73 87",w:"tjenomy.com",la:55.642,lo:14.052},
+{id:101,n:"Lisa Tofft",t:"SILVER, BILDER",a:"Svabesholmsvägen 41, Kivik",p:"0706-84 09 23",w:"lisatofft.se",ig:"lisatofftsatelje",la:55.683,lo:14.230},
+{id:102,n:"Eva Troedson",t:"KERAMIK, RAKU",a:"Bollerup, Tomelilla",p:"0701-46 75 77",w:"keramika.se",ig:"evatroedson",la:55.510,lo:14.002},
+{id:103,n:"Irene Trotzig",t:"MÅLERI",a:"Lillehemsvägen 330, Degeberga",p:"0706-03 17 19",w:"irenetrotzig.com",ig:"irenetrotzig",la:55.838,lo:14.095},
+{id:110,n:"Gerd Zinnerström",t:"KERAMIK",a:"Galleri Kvärrestad, Lunnarp",p:"0725-25 11 87",la:55.748,lo:14.148},
+{id:116,n:"Per-Olof Nilsson",t:"MÅLERI, TECKNING, GRAFIK",a:"Tjugovägen 159, Löderup",p:"0733-60 21 97",w:"perolofnilsson.se",la:55.395,lo:14.115},
+{id:124,n:"Pia Carlström",t:"MÅLERI, SKULPTUR",a:"Sockenvägen 509, Olseröd",p:"0733-90 60 35",w:"piacarlstrom.se",la:55.508,lo:14.062},
+{id:126,n:"Annika Fajersson",t:"MÅLERI, SILVERSMYCKEN, FOTO",a:"Österskogsvägen 38, Maglehem",p:"0703-39 90 58",ig:"fajerssonform",la:55.770,lo:14.158},
+{id:138,n:"Karel Becvar",t:"SKULPTUR, GLAS",a:"Gyllerupsvägen 15, Löderup",p:"0709-13 60 96",w:"karelbecvar.com",la:55.393,lo:14.117},
+{id:141,n:"Clemens Ek",t:"SKULPTUR, SILVER",a:"Rackapottsvägen 4, Rörum",p:"0705-11 34 15",ig:"silverhusen_rorum",la:55.540,lo:14.168},
+{id:143,n:"Karin Palola",t:"MÅLERI",a:"Österlenvägen 1075, Löderup",p:"0730-47 36 10",w:"karinpalola.com",ig:"karinpalola",la:55.397,lo:14.120},
+{id:147,n:"Pernilla Persson Jahangiri",t:"MÅLERI, TECKNING, SKULPTUR",a:"Raskarumsvägen 73, Rörum",p:"0735-83 02 42",w:"studio-pp.com",ig:"studiopernillapersson",la:55.542,lo:14.170},
+{id:148,n:"Teresa Rooth",t:"MÅLERI",a:"Julebodavägen 94, Maglehem",p:"0707-85 54 10",w:"rooth.se",ig:"roothmaglehem",la:55.765,lo:14.164},
+{id:149,n:"Anna Rochegova Cederholm",t:"MÅLERI, LITOGRAFI",a:"Sockenvägen 65, Maglehem",p:"0704-16 61 48",w:"annarochegova.com",ig:"annarochegovapainter",la:55.763,lo:14.158},
+{id:154,n:"Niklas Alexanderson",t:"MÅLERI, TECKNING, SKULPTUR, KERAMIK",a:"Torupshusvägen 16, Vitaby",p:"0735-35 06 35",ig:"niklasalexanderson",la:55.650,lo:14.143},
+{id:158,n:"Carsten Nilsson",t:"TRÄBILDHUGGERI",a:"Ystadsvägen 64, Hammenhög",p:"0708-74 01 87",w:"carstennilsson.se",ig:"woodcarver.carsten.nilsson",la:55.436,lo:14.200},
+{id:160,n:"Robert Czysty",t:"MÅLERI",a:"Albovägen 16, Brösarp",p:"0705-97 97 78",w:"robertczysty.se",la:55.722,lo:14.088},
+{id:164,n:"Kattarina Yxhufvud",t:"TEXTIL, BILDVÄV",a:"Stävgatan 7, Skillinge",p:"0704-57 16 63",w:"kattarinayxhufvud.se",ig:"kattarinayxhufvud",la:55.480,lo:14.280},
+{id:166,n:"Anja Richardt Krabbe",t:"MÅLERI, AKVARELL",a:"Holmavägen 106-35, Lövestad",p:"0761-68 37 93",w:"anjarichardtkrabbe.se",ig:"anjarichardtkrabbe",la:55.576,lo:13.856},
+{id:167,n:"Charlotte Adde",t:"MÅLERI, SKULPTUR",a:"Gladsax bygata 49, Simrishamn",p:"0768-98 58 15",w:"igladsax.se",ig:"charlotteadde_art",la:55.520,lo:14.250},
+{id:168,n:"Marcus Bagge",t:"GRAFIK, FOTOGRAFI, SKULPTUR",a:"Malmövägen 99, Gärsnäs",p:"0706-31 69 93",w:"marcusbagge.com",ig:"marcusbagge4real",la:55.486,lo:14.170},
+{id:169,n:"Robina Doxi",t:"BLANDTEKNIK PÅ DUK",a:"Vallby Söderväg 8, Hammenhög",p:"0763-14 69 04",w:"doxi.org",ig:"robinadoxi",la:55.430,lo:14.202},
+{id:170,n:"Susanna Gunnarson",t:"MÅLERI, TECKNING, OBJEKT",a:"Vemmerslövstorpsvägen 115, Gärsnäs",p:"0739-49 35 10",w:"susannagunnarson.com",ig:"lovkullenosterlen",la:55.485,lo:14.165},
+{id:171,n:"Magnus Lönn",t:"ASSEMBLAGE, GRAFIK, SKULPTUR",a:"Brantåsvägen 6, Rörum",p:"0703-96 23 72",ig:"lonn.magnus",la:55.538,lo:14.162},
+{id:173,n:"Sarah Selander",t:"MÅLERI",a:"Kabalavägen 5, Vitaby",p:"0704-96 21 48",ig:"Workby_sarahselander",la:55.648,lo:14.138},
+{id:174,n:"Celestine Soumah Stuermer",t:"SMYCKESFORMGIVNING",a:"Bassakullsvägen 3, Baskemölla",p:"0733-32 71 52",ig:"celestine_soumah_jewellery",la:55.471,lo:14.180},
+{id:176,n:"Anna-Greta Lindstam",t:"AKVARELL",a:"Tågarpsvägen 208, Glemmingebro",p:"0702-44 44 25",w:"annagreta.se",ig:"annagretalindstam",la:55.445,lo:14.105},
+{id:178,n:"Echi Åberg",t:"MÅLERI",a:"Lilla Norregatan 10, Simrishamn",p:"0708-55 82 21",ig:"echianima",la:55.557,lo:14.350},
+{id:179,n:"Hélène Modigh",t:"AKVARELL, GOUACHE",a:"Hallaholmsvägen 40, Simrishamn",p:"0733-52 33 42",w:"helenemodigh.se",ig:"art_helenemodigh",la:55.555,lo:14.345},
+{id:180,n:"Ingalill Nyström",t:"MÅLERI, KERAMIK",a:"Kiviks stora väg 40B, Kivik",p:"0730-47 86 09",w:"ulriksdals.se/konst",ig:"ulriksdals",la:55.681,lo:14.228},
+{id:182,n:"Lisa Säfve",t:"TECKNING, KERAMIK",a:"Torupshusvägen 16, Vitaby",p:"0761-14 86 11",ig:"lisasafve",la:55.651,lo:14.145},
+{id:183,n:"Maria Daubenbüchel",t:"KERAMIK-SKULPTUR",a:"Ljunglyckevägen 37, S:t Olof",p:"0702-83 43 71",w:"maria-daubenbuchel.com",la:55.640,lo:14.130},
+{id:184,n:"Peter Öhman",t:"MÅLERI, KOLLAGE, TRÄ, PLÅT",a:"Tångdalavägen 5, Kivik",p:"0722-51 04 62",ig:"peterohmankonst",la:55.684,lo:14.226},
+{id:186,n:"Gunnel Pettersson",t:"TECKNING, INSTALLATION",a:"Nobelvägen 93, Gislöv",p:"0706-15 02 54",ig:"gunnel_odlingen",la:55.406,lo:14.225},
+{id:187,n:"Alexander Lervik",t:"GLAS, STÅL, TRÄ, ALUMINIUM",a:"Baskevägen 30, Gladsax",p:"0705-43 55 35",w:"lervik.se",ig:"alexandervikstudio",la:55.495,lo:14.215,nw:1},
+{id:188,n:"Anki Blomqvist",t:"MÅLERI, TEXTIL",a:"Skräddaröds backe 1, Gärsnäs",p:"0709-90 96 87",w:"ankiblomqvist.se",ig:"anki_blomqvist",la:55.490,lo:14.180,nw:1},
+{id:189,n:"Carl-Gustav Eriksson",t:"KERAMIK",a:"Lönshult 204, Brösarp",p:"0720-17 71 41",ig:"callekruka",la:55.725,lo:14.092,nw:1},
+{id:190,n:"Hans Jonsson",t:"FOTOGRAFI",a:"Ramsåsa 4902, Tomelilla",p:"0705-49 61 71",w:"fotografhansjonsson.se",ig:"hansfotograf",la:55.545,lo:13.960,nw:1},
+{id:191,n:"Lukas Carpelan",t:"MÖBEL, TRÄ, METALL, TEXTIL",a:"Axlahultsvägen 2, Vitaby",p:"0762-32 24 36",w:"carpelandesign.com",ig:"lukascarpelan",la:55.652,lo:14.148,nw:1},
+{id:192,n:"Pamela Nilsdotter",t:"GRAFIK, FOTO, BLANDTEKNIK",a:"Ingelstorps Byväg 6, Ingelstorp",p:"0703-33 81 73",w:"glirra.se",ig:"glirra",la:55.466,lo:14.128,nw:1},
+{id:193,n:"Sonya Hukaylo",t:"MÅLERI, BLANDTEKNIK",a:"Lejegatan 60, Kivik",p:"0765-92 47 60",w:"sonyahukaylo.art",ig:"sonkuhukay",la:55.694,lo:14.200,nw:1},
+{id:194,n:"Torun Börtz",t:"FOTOGRAFI",a:"Norregatan 2, Gärsnäs",p:"0765-45 60 89",w:"torunbortz.com",ig:"torun_bortz",la:55.491,lo:14.182,nw:1}
+];
+
+var map=L.map('map',{zoomControl:false}).setView([55.58,14.12],10);
+L.control.zoom({position:'topright'}).addTo(map);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
+var cg=L.markerClusterGroup({maxClusterRadius:35,showCoverageOnHover:false});
+var mm={};
+
+function bld(){
+cg.clearLayers();
+A.forEach(function(a){
+var c=a.h?'pin hall':'pin';
+var ic=L.divIcon({className:'',html:'<div class="'+c+'"><span>'+a.id+'</span></div>',iconSize:[28,28],iconAnchor:[14,28]});
+var m=L.marker([a.la,a.lo],{icon:ic}).on('click',function(){op(a)});
+mm[a.id]={m:m,d:a};
+cg.addLayer(m);
+});
+map.addLayer(cg);
+}
+bld();
+
+var pn=document.getElementById('pn'),ov=document.getElementById('ov');
+function op(a){
+document.getElementById('pNum').textContent='#'+a.id;
+document.getElementById('pName').textContent=a.n;
+document.getElementById('pTech').textContent=a.t;
+var tg=document.getElementById('pTags');tg.innerHTML='';
+if(a.nw){var ne=document.createElement('span');ne.className='ptag new';ne.textContent='NY 2026';tg.appendChild(ne)}
+a.t.split(',').forEach(function(x){var s=document.createElement('span');s.className='ptag';s.textContent=x.trim();tg.appendChild(s)});
+var rw=document.getElementById('pRows');rw.innerHTML='';
+var rs=[{i:'📍',l:'Adress',v:a.a},{i:'📞',l:'Telefon',v:'<a href="tel:'+a.p+'">'+a.p+'</a>'}];
+if(a.e)rs.push({i:'✉️',l:'E-post',v:'<a href="mailto:'+a.e+'">'+a.e+'</a>'});
+if(a.w)rs.push({i:'🌐',l:'Webb',v:'<a href="https://'+a.w+'" target="_blank">'+a.w+'</a>'});
+if(a.ig)rs.push({i:'📸',l:'Instagram',v:'<a href="https://instagram.com/'+a.ig+'" target="_blank">@'+a.ig+'</a>'});
+rs.forEach(function(r){var d=document.createElement('div');d.className='prow';d.innerHTML='<span class="prow-i">'+r.i+'</span><span class="prow-l">'+r.l+'</span><span class="prow-v">'+r.v+'</span>';rw.appendChild(d)});
+document.getElementById('pBtns').innerHTML='<a class="pbtn pbtn-a" href="https://www.google.com/maps/directions/?api=1&destination='+a.la+','+a.lo+'" target="_blank">🧭 Vägbeskrivning</a>'+(a.w?'<a class="pbtn pbtn-b" href="https://'+a.w+'" target="_blank">🌐 Hemsida</a>':'');
+pn.classList.add('open');ov.classList.add('open');
+map.flyTo([a.la,a.lo],14,{duration:.7});
+}
+function cl(){pn.classList.remove('open');ov.classList.remove('open')}
+document.getElementById('pX').onclick=cl;
+ov.onclick=cl;
+
+var sl=document.getElementById('sList'),sd=document.getElementById('side');
+function rList(items){
+sl.innerHTML='';
+items.sort(function(a,b){return a.id-b.id}).forEach(function(a){
+var d=document.createElement('div');d.className='si';
+d.innerHTML='<span class="si-n">'+a.id+'</span><div><div class="si-name">'+a.n+(a.nw?' ★':'')+'</div><div class="si-sub">'+a.t+'</div></div>';
+d.onclick=function(){sd.classList.remove('open');op(a)};
+sl.appendChild(d);
+});
+}
+rList(A);
+document.getElementById('bList').onclick=function(){sd.classList.toggle('open')};
+document.getElementById('sX').onclick=function(){sd.classList.remove('open')};
+
+var af='all';
+function filt(){
+var q=document.getElementById('q').value.toLowerCase();
+var f=A.filter(function(a){
+var ms=!q||a.n.toLowerCase().indexOf(q)>-1||a.t.toLowerCase().indexOf(q)>-1||a.a.toLowerCase().indexOf(q)>-1;
+var mf=af==='all'||a.t.toLowerCase().indexOf(af.toLowerCase())>-1;
+return ms&&mf;
+});
+cg.clearLayers();
+f.forEach(function(a){cg.addLayer(mm[a.id].m)});
+rList(f);
+document.getElementById('cnt').textContent=f.length;
+}
+document.getElementById('q').oninput=filt;
+document.querySelectorAll('.fbtn').forEach(function(b){
+b.onclick=function(){
+document.querySelectorAll('.fbtn').forEach(function(x){x.classList.remove('on')});
+b.classList.add('on');af=b.getAttribute('data-f');filt();
+};
+});
+</script>
+
+</body>
+</html>
