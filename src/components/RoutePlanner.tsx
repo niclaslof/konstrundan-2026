@@ -109,24 +109,16 @@ export default function RoutePlanner({
   const handleOpenGoogleMaps = () => {
     if (route.length === 0) return;
 
-    // Use addresses for better Google Maps results
-    const encAddr = (a: Artist) => encodeURIComponent(`${a.address}, ${a.location}, Sverige`);
+    // Use coordinates (always reliable) – addresses can be garbage from scraping
+    const toPoint = (a: Artist) => `${a.lat},${a.lng}`;
 
-    let url: string;
-    if (userPos) {
-      // Start from user position
-      const origin = `${userPos.lat},${userPos.lng}`;
-      const destination = encAddr(route[route.length - 1]);
-      const waypoints = route.slice(0, -1).map(encAddr).join("|");
-      url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=driving`;
-    } else {
-      const origin = encAddr(route[0]);
-      const destination = encAddr(route[route.length - 1]);
-      const waypoints = route.slice(1, -1).map(encAddr).join("|");
-      url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-      if (waypoints) url += `&waypoints=${waypoints}`;
-      url += `&travelmode=driving`;
-    }
+    const origin = userPos ? `${userPos.lat},${userPos.lng}` : toPoint(route[0]);
+    const destination = toPoint(route[route.length - 1]);
+    const waypointList = userPos ? route.slice(0, -1) : route.slice(1, -1);
+    const waypoints = waypointList.map(toPoint).join("|");
+
+    let url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
+    if (waypoints) url += `&waypoints=${waypoints}`;
 
     window.open(url, "_blank");
   };
