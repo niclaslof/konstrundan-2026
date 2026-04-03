@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { APIProvider, Map as GoogleMap, useMap } from "@vis.gl/react-google-maps";
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { Artist, REGIONS } from "@/lib/types";
 
 interface MapProps {
@@ -14,6 +15,7 @@ interface MapProps {
 function MarkerLayer({ artists, selectedArtist, onSelectArtist, isFavorite }: MapProps) {
   const map = useMap();
   const markersRef = useRef<google.maps.Marker[]>([]);
+  const clustererRef = useRef<MarkerClusterer | null>(null);
 
   // Pan to selected artist
   useEffect(() => {
@@ -23,21 +25,24 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist, isFavorite }: Ma
     }
   }, [map, selectedArtist]);
 
-  // Create markers
+  // Create markers + clustering
   useEffect(() => {
     if (!map) return;
 
     // Clear old
+    if (clustererRef.current) {
+      clustererRef.current.clearMarkers();
+    }
     markersRef.current.forEach((m) => m.setMap(null));
     markersRef.current = [];
 
-    artists.forEach((artist) => {
+    const markers = artists.map((artist) => {
       const region = REGIONS[artist.regionId];
       const pinColor = artist.isHall ? "#991b1b" : region.color;
       const fav = isFavorite?.(artist.regionId, artist.id) ?? false;
+
       const marker = new google.maps.Marker({
         position: { lat: artist.lat, lng: artist.lng },
-        map,
         title: artist.name,
         label: {
           text: fav ? "♥" : String(artist.id),
@@ -55,17 +60,51 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist, isFavorite }: Ma
           anchor: new google.maps.Point(12, 22),
           labelOrigin: new google.maps.Point(12, 9),
         },
+        optimized: true,
       });
 
       marker.addListener("click", () => onSelectArtist(artist));
-      markersRef.current.push(marker);
+      return marker;
+    });
+
+    markersRef.current = markers;
+
+    // Create clusterer
+    clustererRef.current = new MarkerClusterer({
+      map,
+      markers,
+      renderer: {
+        render: ({ count, position }) => {
+          return new google.maps.Marker({
+            position,
+            label: {
+              text: String(count),
+              color: "#fff",
+              fontWeight: "700",
+              fontSize: "13px",
+            },
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              fillColor: "#b45309",
+              fillOpacity: 0.9,
+              strokeColor: "#fff",
+              strokeWeight: 2,
+              scale: Math.min(18, 12 + Math.log2(count) * 3),
+            },
+            zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+          });
+        },
+      },
     });
 
     return () => {
+      if (clustererRef.current) {
+        clustererRef.current.clearMarkers();
+      }
       markersRef.current.forEach((m) => m.setMap(null));
       markersRef.current = [];
     };
-  }, [map, artists, onSelectArtist]);
+  }, [map, artists, onSelectArtist, isFavorite]);
 
   // Highlight selected marker
   useEffect(() => {
@@ -97,8 +136,20 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist, isFavorite }: Ma
   return null;
 }
 
+function LoadingSpinner() {
+  return (
+    <div className="fixed top-[96px] left-0 right-0 bottom-0 flex items-center justify-center bg-paper z-10">
+      <div className="text-center">
+        <div className="w-12 h-12 border-4 border-stone-200 border-t-accent rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-sm text-warm font-medium">Laddar kartan...</p>
+      </div>
+    </div>
+  );
+}
+
 export default function MapComponent({ artists, selectedArtist, onSelectArtist, isFavorite }: MapProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   if (!apiKey) {
     return (
@@ -115,37 +166,40 @@ export default function MapComponent({ artists, selectedArtist, onSelectArtist, 
   }
 
   return (
-    <div className="fixed top-[96px] left-0 right-0 bottom-0 z-0">
-      <APIProvider apiKey={apiKey}>
-        <GoogleMap
-          defaultCenter={{ lat: 55.58, lng: 14.12 }}
-          defaultZoom={10}
-          gestureHandling="greedy"
-          disableDefaultUI={false}
-          mapTypeControl={true}
-          zoomControl={true}
-          streetViewControl={false}
-          fullscreenControl={true}
-          className="w-full h-full"
-          styles={[
-            { elementType: "geometry", stylers: [{ color: "#f5f0eb" }] },
-            { elementType: "labels.text.stroke", stylers: [{ color: "#f5f0eb" }] },
-            { elementType: "labels.text.fill", stylers: [{ color: "#78716c" }] },
-            { featureType: "road", elementType: "geometry", stylers: [{ color: "#e7e5e4" }] },
-            { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#d6d3d1" }] },
-            { featureType: "water", elementType: "geometry", stylers: [{ color: "#c4d5e3" }] },
-            { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#dde8d0" }] },
-            { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
-          ]}
-        >
-          <MarkerLayer
-            artists={artists}
-            selectedArtist={selectedArtist}
-            onSelectArtist={onSelectArtist}
-            isFavorite={isFavorite}
-          />
-        </GoogleMap>
-      </APIProvider>
-    </div>
+    <>
+      {!mapLoaded && <LoadingSpinner />}
+      <div className="fixed top-[96px] left-0 right-0 bottom-0 z-0">
+        <APIProvider apiKey={apiKey} onLoad={() => setMapLoaded(true)}>
+          <GoogleMap
+            defaultCenter={{ lat: 55.75, lng: 13.50 }}
+            defaultZoom={9}
+            gestureHandling="greedy"
+            disableDefaultUI={false}
+            mapTypeControl={true}
+            zoomControl={true}
+            streetViewControl={false}
+            fullscreenControl={true}
+            className="w-full h-full"
+            styles={[
+              { elementType: "geometry", stylers: [{ color: "#f5f0eb" }] },
+              { elementType: "labels.text.stroke", stylers: [{ color: "#f5f0eb" }] },
+              { elementType: "labels.text.fill", stylers: [{ color: "#78716c" }] },
+              { featureType: "road", elementType: "geometry", stylers: [{ color: "#e7e5e4" }] },
+              { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#d6d3d1" }] },
+              { featureType: "water", elementType: "geometry", stylers: [{ color: "#c4d5e3" }] },
+              { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#dde8d0" }] },
+              { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
+            ]}
+          >
+            <MarkerLayer
+              artists={artists}
+              selectedArtist={selectedArtist}
+              onSelectArtist={onSelectArtist}
+              isFavorite={isFavorite}
+            />
+          </GoogleMap>
+        </APIProvider>
+      </div>
+    </>
   );
 }

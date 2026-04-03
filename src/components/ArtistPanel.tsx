@@ -1,7 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Artist, REGIONS } from "@/lib/types";
-import descriptions from "@/data/descriptions.json";
 
 interface ArtistPanelProps {
   artist: Artist | null;
@@ -16,6 +16,17 @@ export default function ArtistPanel({
   isFavorite,
   onToggleFavorite,
 }: ArtistPanelProps) {
+  const [descriptions, setDescriptions] = useState<Record<string, string>>({});
+
+  // Lazy-load descriptions on first open
+  useEffect(() => {
+    if (artist && Object.keys(descriptions).length === 0) {
+      import("@/data/descriptions.json").then((mod) => {
+        setDescriptions(mod.default as Record<string, string>);
+      });
+    }
+  }, [artist]);
+
   if (!artist) return null;
 
   const techniqueTags = artist.technique.split(",").map((t) => t.trim());
@@ -115,7 +126,7 @@ export default function ArtistPanel({
 
           {/* AI Description or fallback */}
           <p className="text-sm text-warm leading-relaxed mb-4">
-            {(descriptions as Record<string, string>)[`${artist.regionId}-${artist.id}`] ||
+            {descriptions[`${artist.regionId}-${artist.id}`] ||
               (artist.isHall
                 ? `Samlingsutställning med alla deltagande konstnärer i Konstrundan 2026. Öppet lör–sön och helgdagar 10–18, vardagar 13–17. Entré: 100 kr, fri entré under 18 år.`
                 : `${artist.name} arbetar med ${artist.technique.toLowerCase()} och ställer ut i sin ateljé i ${artist.location} under Konstrundan 3–12 april 2026.${artist.isNew ? " Ny medlem i ÖSKГ i år!" : ""}`)}

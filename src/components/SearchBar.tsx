@@ -30,22 +30,22 @@ export default function SearchBar({
   favoriteCount,
 }: SearchBarProps) {
   return (
-    <div className="fixed top-[52px] left-0 right-0 z-40 bg-paper/95 backdrop-blur-sm border-b border-stone-200 px-3 py-2 md:px-6">
-      <div className="flex items-center gap-2 flex-wrap">
+    <div className="fixed top-[52px] left-0 right-0 z-40 bg-paper/95 backdrop-blur-sm border-b border-stone-200 px-2 py-1.5 md:px-6 md:py-2">
+      <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
         {/* Search */}
         <input
           type="text"
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
-          placeholder="Sök konstnär, ort, teknik..."
-          className="px-3 py-2 rounded-lg border border-stone-300 text-sm w-44 md:w-56 bg-white outline-none focus:border-accent transition-colors"
+          placeholder="Sök konstnär, ort..."
+          className="px-2.5 py-1.5 md:py-2 rounded-lg border border-stone-300 text-sm w-36 md:w-56 bg-white outline-none focus:border-accent transition-colors"
         />
 
         {/* Favorites filter */}
         {favoriteCount > 0 && (
           <button
             onClick={onToggleFavorites}
-            className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+            className={`px-2 py-1 md:px-3 md:py-1.5 rounded-full border text-[0.65rem] md:text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
               showFavoritesOnly
                 ? "bg-amber-500 text-white border-amber-500"
                 : "bg-white border-amber-400 text-amber-600 hover:bg-amber-50"
@@ -63,7 +63,7 @@ export default function SearchBar({
             <button
               key={rid}
               onClick={() => onRegionToggle(rid)}
-              className="px-3 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer whitespace-nowrap"
+              className="px-2 py-1 md:px-3 md:py-1.5 rounded-full border text-[0.65rem] md:text-xs font-semibold transition-all cursor-pointer whitespace-nowrap"
               style={{
                 backgroundColor: isActive ? region.color : "#fff",
                 color: isActive ? "#fff" : region.color,
@@ -82,7 +82,7 @@ export default function SearchBar({
         {/* Technique filters – multi-select */}
         <button
           onClick={onClearFilters}
-          className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-2 py-1 md:px-3 md:py-1.5 rounded-full border text-[0.65rem] md:text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
             activeFilters.length === 0
               ? "bg-ink text-white border-ink"
               : "bg-white border-stone-300 hover:border-ink hover:text-ink"
@@ -96,7 +96,7 @@ export default function SearchBar({
             <button
               key={t}
               onClick={() => onFilterToggle(t as TechniqueFilter)}
-              className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-2 py-1 md:px-3 md:py-1.5 rounded-full border text-[0.65rem] md:text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                 isActive
                   ? "bg-ink text-white border-ink"
                   : "bg-white border-stone-300 hover:border-ink hover:text-ink"
