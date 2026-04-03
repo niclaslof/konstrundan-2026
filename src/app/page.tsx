@@ -6,9 +6,11 @@ import SearchBar from "@/components/SearchBar";
 import MapComponent from "@/components/Map";
 import ArtistPanel from "@/components/ArtistPanel";
 import ArtistList from "@/components/ArtistList";
+import RoutePlanner from "@/components/RoutePlanner";
 import { allArtists } from "@/data/artists";
 import { Artist, RegionId, TechniqueFilter, techniques } from "@/lib/types";
 import { useFavorites } from "@/lib/useFavorites";
+import { useGeolocation, distanceFromUser } from "@/lib/useGeolocation";
 
 const availableRegions = [
   ...new Set(allArtists.map((a) => a.regionId)),
@@ -22,9 +24,12 @@ export default function Home() {
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
   const [listOpen, setListOpen] = useState(false);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [routeOpen, setRouteOpen] = useState(false);
+  const [sortByDistance, setSortByDistance] = useState(false);
 
   const { favorites, favoriteCount, toggleFavorite, isFavorite } =
     useFavorites();
+  const { position, loading: geoLoading, requestPosition } = useGeolocation();
 
   const handleRegionToggle = (regionId: RegionId) => {
     setActiveRegions((prev) => {
@@ -36,9 +41,18 @@ export default function Home() {
     });
   };
 
+  const handleNearMe = () => {
+    if (position) {
+      setSortByDistance(!sortByDistance);
+    } else {
+      requestPosition();
+      setSortByDistance(true);
+    }
+  };
+
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
-    return allArtists.filter((a) => {
+    let result = allArtists.filter((a) => {
       if (showFavoritesOnly && !isFavorite(a.regionId, a.id)) return false;
 
       const matchesRegion = activeRegions.includes(a.regionId);
@@ -56,7 +70,22 @@ export default function Home() {
 
       return matchesRegion && matchesSearch && matchesFilter;
     });
-  }, [query, activeFilters, activeRegions, showFavoritesOnly, isFavorite]);
+
+    // Sort by distance if position available
+    if (sortByDistance && position) {
+      result = [...result].sort(
+        (a, b) =>
+          distanceFromUser(position.lat, position.lng, a.lat, a.lng) -
+          distanceFromUser(position.lat, position.lng, b.lat, b.lng)
+      );
+    }
+
+    return result;
+  }, [query, activeFilters, activeRegions, showFavoritesOnly, isFavorite, sortByDistance, position]);
+
+  const favoriteArtists = allArtists.filter((a) =>
+    isFavorite(a.regionId, a.id)
+  );
 
   return (
     <>
@@ -113,14 +142,42 @@ export default function Home() {
         onToggleFavorite={toggleFavorite}
       />
 
+      <RoutePlanner
+        favorites={favoriteArtists}
+        isOpen={routeOpen}
+        onClose={() => setRouteOpen(false)}
+        onSelectArtist={(a) => {
+          setRouteOpen(false);
+          setSelectedArtist(a);
+        }}
+      />
+
       {/* Bottom bar */}
       <div className="fixed bottom-4 left-3 z-50 flex gap-2">
         <button
           onClick={() => setListOpen(!listOpen)}
-          className="px-4 py-2.5 rounded-xl bg-ink text-paper text-sm font-semibold shadow-[0_3px_12px_rgba(0,0,0,0.25)] hover:bg-accent transition-colors cursor-pointer flex items-center gap-2"
+          className="px-3 py-2.5 md:px-4 rounded-xl bg-ink text-paper text-xs md:text-sm font-semibold shadow-[0_3px_12px_rgba(0,0,0,0.25)] hover:bg-accent transition-colors cursor-pointer flex items-center gap-1.5"
         >
           📋 Lista
         </button>
+        <button
+          onClick={handleNearMe}
+          className={`px-3 py-2.5 md:px-4 rounded-xl text-xs md:text-sm font-semibold shadow-[0_3px_12px_rgba(0,0,0,0.25)] transition-colors cursor-pointer flex items-center gap-1.5 ${
+            sortByDistance
+              ? "bg-accent text-paper"
+              : "bg-ink text-paper hover:bg-accent"
+          }`}
+        >
+          {geoLoading ? "⏳" : "📍"} Nära mig
+        </button>
+        {favoriteCount > 0 && (
+          <button
+            onClick={() => setRouteOpen(true)}
+            className="px-3 py-2.5 md:px-4 rounded-xl bg-amber-600 text-paper text-xs md:text-sm font-semibold shadow-[0_3px_12px_rgba(0,0,0,0.25)] hover:bg-amber-700 transition-colors cursor-pointer flex items-center gap-1.5"
+          >
+            🧭 Planera rutt ({favoriteCount})
+          </button>
+        )}
       </div>
     </>
   );

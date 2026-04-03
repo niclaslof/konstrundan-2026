@@ -40,6 +40,24 @@ body {
   background: #a8a29e;
 }
 
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #0c0a09;
+    color: #e7e5e4;
+  }
+  .bg-paper { background: #0c0a09 !important; }
+  .bg-panel { background: #1c1917 !important; }
+  .bg-ink { background: #faf8f5 !important; color: #1c1917 !important; }
+  .text-ink { color: #e7e5e4 !important; }
+  .text-warm { color: #a8a29e !important; }
+  .border-stone-200 { border-color: #292524 !important; }
+  .border-stone-100 { border-color: #1c1917 !important; }
+  .bg-white { background: #1c1917 !important; }
+  .bg-stone-100 { background: #292524 !important; }
+  input { background: #292524 !important; color: #e7e5e4 !important; border-color: #44403c !important; }
+}
+
 /* Google Maps overrides */
 .gm-style-iw {
   font-family: var(--font-sans) !important;

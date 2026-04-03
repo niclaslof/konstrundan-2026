@@ -198,6 +198,12 @@ export default function ArtistPanel({
                 🌐 Hemsida
               </a>
             )}
+            <a
+              href={`/artist/${artist.regionId}/${artist.id}`}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-stone-100 text-ink text-sm font-semibold border border-stone-200 hover:border-accent hover:text-accent transition-colors"
+            >
+              🔗 Dela profil
+            </a>
           </div>
         </div>
       </div>

@@ -172,6 +172,27 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist, isFavorite }: Ma
   return null;
 }
 
+function MapTypeToggle() {
+  const map = useMap();
+  const [isSatellite, setIsSatellite] = useState(false);
+
+  const toggle = () => {
+    if (!map) return;
+    const newType = isSatellite ? "roadmap" : "hybrid";
+    map.setMapTypeId(newType);
+    setIsSatellite(!isSatellite);
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      className="fixed top-[104px] right-3 z-10 px-3 py-2 rounded-lg bg-white shadow-lg border border-stone-200 text-xs font-semibold cursor-pointer hover:bg-stone-50 transition-colors"
+    >
+      {isSatellite ? "🗺️ Karta" : "🛰️ Satellit"}
+    </button>
+  );
+}
+
 function LoadingSpinner() {
   return (
     <div className="fixed top-[96px] left-0 right-0 bottom-0 flex items-center justify-center bg-paper z-10">
@@ -211,7 +232,7 @@ export default function MapComponent({ artists, selectedArtist, onSelectArtist, 
             defaultZoom={9}
             gestureHandling="greedy"
             disableDefaultUI={false}
-            mapTypeControl={true}
+            mapTypeControl={false}
             zoomControl={true}
             streetViewControl={false}
             fullscreenControl={true}
@@ -233,6 +254,7 @@ export default function MapComponent({ artists, selectedArtist, onSelectArtist, 
               onSelectArtist={onSelectArtist}
               isFavorite={isFavorite}
             />
+            <MapTypeToggle />
           </GoogleMap>
         </APIProvider>
       </div>
