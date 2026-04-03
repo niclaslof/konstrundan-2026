@@ -6,18 +6,38 @@ import SearchBar from "@/components/SearchBar";
 import MapComponent from "@/components/Map";
 import ArtistPanel from "@/components/ArtistPanel";
 import ArtistList from "@/components/ArtistList";
-import { artists } from "@/data/artists";
-import { Artist, TechniqueFilter } from "@/lib/types";
+import { allArtists } from "@/data/artists";
+import { Artist, RegionId, TechniqueFilter, REGIONS } from "@/lib/types";
+
+// Determine which regions actually have data
+const availableRegions = [
+  ...new Set(allArtists.map((a) => a.regionId)),
+] as RegionId[];
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<TechniqueFilter>("all");
+  const [activeRegions, setActiveRegions] =
+    useState<RegionId[]>(availableRegions);
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
   const [listOpen, setListOpen] = useState(false);
 
+  const handleRegionToggle = (regionId: RegionId) => {
+    setActiveRegions((prev) => {
+      if (prev.includes(regionId)) {
+        // Don't allow deselecting all
+        if (prev.length === 1) return prev;
+        return prev.filter((r) => r !== regionId);
+      }
+      return [...prev, regionId];
+    });
+  };
+
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
-    return artists.filter((a) => {
+    return allArtists.filter((a) => {
+      const matchesRegion = activeRegions.includes(a.regionId);
+
       const matchesSearch =
         !q ||
         a.name.toLowerCase().includes(q) ||
@@ -29,18 +49,21 @@ export default function Home() {
         activeFilter === "all" ||
         a.technique.toLowerCase().includes(activeFilter.toLowerCase());
 
-      return matchesSearch && matchesFilter;
+      return matchesRegion && matchesSearch && matchesFilter;
     });
-  }, [query, activeFilter]);
+  }, [query, activeFilter, activeRegions]);
 
   return (
     <>
-      <Header artistCount={filtered.length} />
+      <Header artistCount={filtered.length} activeRegions={activeRegions} />
       <SearchBar
         query={query}
         onQueryChange={setQuery}
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
+        activeRegions={activeRegions}
+        onRegionToggle={handleRegionToggle}
+        availableRegions={availableRegions}
       />
 
       <MapComponent

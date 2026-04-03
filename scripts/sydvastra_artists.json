@@ -1,0 +1,317 @@
+[
+  {
+    "name": "Annika Andersson",
+    "address": "Mäster Nilsgatan 1",
+    "location": "Malmö",
+    "phone": "0706 58 46 88",
+    "email": "annika.1960@live.se"
+  },
+  {
+    "name": "Lena Andersson",
+    "address": "N.Lillvägen 5a",
+    "location": "Höllviken",
+    "phone": "0734 22 60 16",
+    "email": "dorisdamer@gmail.com"
+  },
+  {
+    "name": "Monica Andersson",
+    "address": "Stenkällevägen 77 B",
+    "location": "Malmö",
+    "phone": "0730 31 79 46",
+    "email": "musikobild@gmail.com"
+  },
+  {
+    "name": "Pärra Andreasson",
+    "address": "Rolfsgatan 7A",
+    "location": "Malmö",
+    "phone": "0707 66 61 22",
+    "email": "pa_andreasson@yahoo.se"
+  },
+  {
+    "name": "Tina Apelgren",
+    "address": "Spovgränd 2",
+    "location": "Falsterbo",
+    "phone": "0709 71 68 26",
+    "email": "tinaapelgren@gmail.com"
+  },
+  {
+    "name": "Lena Babiker Mattsson",
+    "address": "Rödhakevägen 8",
+    "location": "Anderslöv",
+    "phone": "0410 266 86",
+    "email": "lena100art@hotmail.com"
+  },
+  {
+    "name": "Sofia Bennrup",
+    "address": "",
+    "location": "Malmö",
+    "phone": "0736 77 33 84",
+    "email": "sofia_bennrup@hotmail.com"
+  },
+  {
+    "name": "Victoria Boysen",
+    "address": "Dockgatan 35",
+    "location": "Malmö",
+    "phone": "0704 33 20 13",
+    "email": "vb.konst@gmail.com"
+  },
+  {
+    "name": "Petra Braadli",
+    "address": "Gamleväg 50",
+    "location": "Höllviken",
+    "phone": "0723 65 73 63",
+    "email": "p.braadli@gmail.com"
+  },
+  {
+    "name": "Susanne Dagsberg",
+    "address": "Ripavägen 20",
+    "location": "Äsperöd",
+    "phone": "0703 54 14 57",
+    "email": "susanne@dagsberg.com"
+  },
+  {
+    "name": "Rolf Engfelt",
+    "address": "Gamla gatan 4",
+    "location": "Malmö",
+    "phone": "0705 15 95 44",
+    "email": "rolf.engfelt@telia.com"
+  },
+  {
+    "name": "Camilla Eriksson",
+    "address": "Falsterbovägen 1 B",
+    "location": "Vellinge",
+    "phone": "0708 43 44 17",
+    "email": "c.eriksson@mk-illumination.se"
+  },
+  {
+    "name": "Eva Gassne Jeckelmann",
+    "address": "Geijersgatan 20",
+    "location": "Limhamn",
+    "phone": "0709 39 61 99",
+    "email": "eva@swedenland.se"
+  },
+  {
+    "name": "Astrid Gate Stiernblad",
+    "address": "Markievägen 362-95",
+    "location": "Anderslöv",
+    "phone": "0703 67 51 14",
+    "email": "astrid@astridgate.se"
+  },
+  {
+    "name": "Cornelia Gullberg",
+    "address": "Tärnvägen 4",
+    "location": "Falsterbo",
+    "phone": "0708-16 59 99",
+    "email": "cornelia.gullberg@gmail.com"
+  },
+  {
+    "name": "Lennart Gunther",
+    "address": "",
+    "location": "Malmö",
+    "phone": "0727-14 14 04",
+    "email": "lennartgunther2@gmail.com"
+  },
+  {
+    "name": "Carina Gunther Lindholm",
+    "address": "",
+    "location": "Malmö",
+    "phone": "0702-76 89 91",
+    "email": "ninsa@me.com"
+  },
+  {
+    "name": "Malin Hjortsberg-Blanck",
+    "address": "Helmfeltsgatan 7",
+    "location": "Malmö",
+    "phone": "0733-81 12 11",
+    "email": "malin@adorable.nu"
+  },
+  {
+    "name": "Monica Holmquist",
+    "address": "Furugatan 10",
+    "location": "Bara",
+    "phone": "0706-50 20 26",
+    "email": "monica@monicaholmquist.se"
+  },
+  {
+    "name": "Mats Holtne",
+    "address": "Ekorrvägen 1",
+    "location": "Falsterbo",
+    "phone": "0709-20 58 85",
+    "email": "matsholtne@gmail.com"
+  },
+  {
+    "name": "Alexius Huber",
+    "address": "Ljungsätersvägen 31 C",
+    "location": "Höllviken",
+    "phone": "0703 75 53 88",
+    "email": "alexius.huber@telia.com"
+  },
+  {
+    "name": "Hans Johnfors",
+    "address": "",
+    "location": "Ystad",
+    "phone": "0702 40 48 95",
+    "email": "hans.johnfors@hotmail.com"
+  },
+  {
+    "name": "Barbara Johnson Kihlman",
+    "address": "Malörtsvägen 4",
+    "location": "Trelleborg",
+    "phone": "0706 93 91 48",
+    "email": "barbara@bjlark.se"
+  },
+  {
+    "name": "Gunvor Lantz",
+    "address": "Spelmansgatan 76",
+    "location": "Malmö",
+    "phone": "0706 99 47 74",
+    "email": "lantz.gunvor@gmail.com"
+  },
+  {
+    "name": "Karin Lindstedt Kirchhoff",
+    "address": "Båtmansgränd 24",
+    "location": "Bunkeflostrand",
+    "phone": "0707 36 33 03",
+    "email": "Karin@ateljekarin.se"
+  },
+  {
+    "name": "Gunilla Magnusson",
+    "address": "Vikingagatan 66",
+    "location": "Malmö",
+    "phone": "0704 28 88 41",
+    "email": "701magnusson@telia.com"
+  },
+  {
+    "name": "Nina Martinez",
+    "address": "Solbacksvägen 13",
+    "location": "Malmö",
+    "phone": "0707 36 60 79",
+    "email": "ninab100@hotmail.com"
+  },
+  {
+    "name": "Ursula Matl",
+    "address": "Nordlinds väg 96 C",
+    "location": "Malmö",
+    "phone": "0731 56 57 99",
+    "email": "ursulamatl@outlook.com"
+  },
+  {
+    "name": "Ylva Mårtensson",
+    "address": "Lokstallsgatan 53",
+    "location": "Limhamn",
+    "phone": "0706 420451",
+    "email": "ylva_ka@hotmail.com"
+  },
+  {
+    "name": "Birgitta Nelson Clauss",
+    "address": "Gottåkravägen 19",
+    "location": "Höllviken",
+    "phone": "0705 45 14 96",
+    "email": "nelson@clauss.se"
+  },
+  {
+    "name": "Marianne Nordström",
+    "address": "Örnvägen 20",
+    "location": "26 25",
+    "phone": "",
+    "email": "nordstrommarianne@outlook.com"
+  },
+  {
+    "name": "Cornelis Ooms",
+    "address": "Södra Åby Byaväg 198-0",
+    "location": "Klagstorp",
+    "phone": "0736 10 02 13",
+    "email": "cornelisooms@hotmail.com"
+  },
+  {
+    "name": "Susanne Persson",
+    "address": "Uppsalagatan 22",
+    "location": "Malmö",
+    "phone": "0737 55 20 88",
+    "email": "susanne@astudiovision.com"
+  },
+  {
+    "name": "Anna Sandberg",
+    "address": "Gångvägen 2",
+    "location": "Vellinge",
+    "phone": "0705 72 73 01",
+    "email": "anna@anna-sandberg.nu"
+  },
+  {
+    "name": "Leila Schüller",
+    "address": "Jullovsvägen 25",
+    "location": "54 60",
+    "phone": "",
+    "email": "leila.schyller@icloud.com"
+  },
+  {
+    "name": "Eva Strinnö",
+    "address": "S Åby Stationsväg 6-0",
+    "location": "Klagstorp",
+    "phone": "0760 84 96 06",
+    "email": "evastrinnokonst@gmail.com"
+  },
+  {
+    "name": "Dick Thellmark",
+    "address": "Tremansvägen 12",
+    "location": "Höllviken",
+    "phone": "0704 66 36 15",
+    "email": "dick@thellmark-art.se"
+  },
+  {
+    "name": "Margareta Tomner",
+    "address": "Köpenhamnsvägen 43 A",
+    "location": "Malmö",
+    "phone": "0731 81 72 90",
+    "email": "m_tomner@hotmail.com"
+  },
+  {
+    "name": "Kerstin Torssell",
+    "address": "Strölandsvägen 8",
+    "location": "Vellinge",
+    "phone": "0706 10 13 24",
+    "email": "kerstin.torssell@telia.com"
+  },
+  {
+    "name": "Håkan Trulsson",
+    "address": "Landsvägen 346-3",
+    "location": "Vellinge",
+    "phone": "0706 75 50 59",
+    "email": "hakan.ahlander@gmail.com"
+  },
+  {
+    "name": "Henrik Ullebo",
+    "address": "Hallongatan 5",
+    "location": "Svedala",
+    "phone": "0705 62 08 19",
+    "email": "henrik.ullebo@gmail.com"
+  },
+  {
+    "name": "Ingrid Wallin",
+    "address": "Silvervingevägen 11",
+    "location": "Beddingestrand",
+    "phone": "0730596703",
+    "email": "walliningrid15@gmail.com"
+  },
+  {
+    "name": "Mona Westerlund",
+    "address": "Drabantgatan 4 A",
+    "location": "Malmö",
+    "phone": "0708 54 73 03",
+    "email": "monawesterlund@live.se"
+  },
+  {
+    "name": "Anette Widman Knutsson",
+    "address": "Nötesjö bygata 21",
+    "location": "Svedala",
+    "phone": "0733 82 64 15",
+    "email": "anette.widman.knutsson@gmail.com"
+  },
+  {
+    "name": "Marianne Ågren",
+    "address": "Erikstorpsgatan 24",
+    "location": "Malmö",
+    "phone": "0739 74 92 23",
+    "email": "marianneagren@hotmail.se"
+  }
+]

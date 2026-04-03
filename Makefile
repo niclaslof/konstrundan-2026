@@ -1,9 +1,14 @@
 # Konstrundan 2026 – Makefile
-# Usage: make setup    → creates venv + installs everything
-#        make dev      → starts Next.js dev server
-#        make geocode  → geocode all artist addresses
-#        make scrape   → scrape artist images
-#        make all      → full pipeline (setup + geocode + scrape + dev)
+# ══════════════════════════════════════════════════
+# Usage:
+#   make setup       → creates venv + installs everything
+#   make dev         → starts Next.js dev server
+#   make scrape-all  → scrape ALL regions (full pipeline)
+#   make scrape-vskg → scrape only Västra Skåne
+#   make geocode     → geocode all artist addresses
+#   make images      → extract/scrape artist images
+#   make pipeline    → full data pipeline (scrape + geocode + images)
+#   make all         → setup + pipeline + dev
 
 PYTHON = python
 VENV = .venv
@@ -15,7 +20,9 @@ NPM = npm
 # Setup
 # ──────────────────────────────────────────────
 
-.PHONY: setup setup-python setup-node dev all clean geocode scrape extract
+.PHONY: setup setup-python setup-node dev build all clean
+.PHONY: scrape-all scrape-ostra scrape-vskg scrape-nordvastra scrape-mittskane scrape-sydvastra
+.PHONY: geocode images pipeline
 
 setup: setup-python setup-node
 	@echo ✅ All dependencies installed
@@ -25,7 +32,7 @@ setup-python:
 	$(PYTHON) -m venv $(VENV)
 	$(PIP) install --upgrade pip
 	$(PIP) install -e ".[dev]"
-	@echo ✅ Python venv ready at $(VENV)/
+	@echo ✅ Python venv ready
 
 setup-node:
 	@echo 📦 Installing Node.js dependencies...
@@ -43,26 +50,53 @@ build:
 	$(NPM) run build
 
 # ──────────────────────────────────────────────
-# Data pipeline
+# Data Pipeline – Scraping
 # ──────────────────────────────────────────────
 
-extract:
-	@echo 📄 Extracting artist data from PDF...
+scrape-ostra:
+	@echo 📄 Extracting Östra Skåne from PDF...
 	$(PY) scripts/extract_artists.py
+
+scrape-vskg:
+	@echo 🔵 Scraping Västra Skåne (VSKG)...
+	$(PY) scripts/scrape_vskg.py
+
+scrape-nordvastra:
+	@echo 🟢 Scraping Nordvästra Skåne...
+	@echo ℹ️  Run manually – data parsed from konstrundan.se listing
+
+scrape-mittskane:
+	@echo 🟣 Scraping Mittskåne...
+	@echo ℹ️  Run manually – data parsed from konstrundan.com
+
+scrape-sydvastra:
+	@echo 🔴 Scraping Sydvästra Skåne (KSV)...
+	@echo ℹ️  Run manually – data parsed from ksvkonst.se
+
+scrape-all: scrape-ostra scrape-vskg
+	@echo ✅ All automated scrapers completed
+
+# ──────────────────────────────────────────────
+# Data Pipeline – Geocoding & Images
+# ──────────────────────────────────────────────
 
 geocode:
 	@echo 🗺️ Geocoding artist addresses...
 	$(PY) scripts/geocode_addresses.py
 
-scrape:
-	@echo 🖼️ Scraping artist images...
+images:
+	@echo 🖼️ Extracting/scraping artist images...
+	$(PY) scripts/extract_images.py
 	$(PY) scripts/scrape_images.py
 
 # ──────────────────────────────────────────────
-# Full pipeline
+# Full Pipeline
 # ──────────────────────────────────────────────
 
-all: setup geocode scrape dev
+pipeline: scrape-all geocode images
+	@echo ✅ Full data pipeline completed
+
+all: setup pipeline dev
 
 # ──────────────────────────────────────────────
 # Cleanup

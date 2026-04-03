@@ -1,6 +1,6 @@
 "use client";
 
-import { Artist } from "@/lib/types";
+import { Artist, REGIONS } from "@/lib/types";
 
 interface ArtistListProps {
   artists: Artist[];
@@ -49,7 +49,10 @@ export default function ArtistList({
                 }}
                 className="flex items-center gap-3 px-4 py-2.5 border-b border-stone-100 cursor-pointer hover:bg-tag-bg transition-colors"
               >
-                <span className="w-7 h-7 rounded-full bg-accent text-white flex items-center justify-center text-[0.6rem] font-bold shrink-0">
+                <span
+                  className="w-7 h-7 rounded-full text-white flex items-center justify-center text-[0.6rem] font-bold shrink-0"
+                  style={{ backgroundColor: REGIONS[artist.regionId].color }}
+                >
                   {artist.id}
                 </span>
                 <div className="min-w-0">

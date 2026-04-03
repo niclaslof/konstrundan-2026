@@ -1,6 +1,6 @@
 "use client";
 
-import { Artist } from "@/lib/types";
+import { Artist, REGIONS } from "@/lib/types";
 
 interface ArtistPanelProps {
   artist: Artist | null;
@@ -11,6 +11,7 @@ export default function ArtistPanel({ artist, onClose }: ArtistPanelProps) {
   if (!artist) return null;
 
   const techniqueTags = artist.technique.split(",").map((t) => t.trim());
+  const region = REGIONS[artist.regionId];
 
   return (
     <>
@@ -24,23 +25,26 @@ export default function ArtistPanel({ artist, onClose }: ArtistPanelProps) {
 
       {/* Panel */}
       <div
+        onClick={(e) => e.stopPropagation()}
         className={`fixed right-0 top-0 bottom-0 w-[420px] max-w-[95vw] bg-panel z-[61] transition-transform duration-350 ease-out shadow-[-4px_0_24px_rgba(0,0,0,0.2)] overflow-y-auto ${
           artist ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Header gradient */}
-        <div className="relative h-48 bg-gradient-to-br from-tag-bg via-amber-200 to-accent-light flex items-center justify-center overflow-hidden">
-          {artist.imageUrl ? (
-            <img
-              src={artist.imageUrl}
-              alt={artist.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <span className="text-6xl font-bold text-white/50 font-[family-name:var(--font-playfair)]">
-              #{artist.id}
-            </span>
-          )}
+        {/* Header with artist image */}
+        <div className="relative h-56 bg-gradient-to-br from-tag-bg via-amber-200 to-accent-light flex items-center justify-center overflow-hidden">
+          <img
+            src={`/images/artists/${artist.id}.jpg`}
+            alt={artist.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to number if image doesn't exist
+              (e.target as HTMLImageElement).style.display = "none";
+              (e.target as HTMLImageElement).parentElement!.classList.add("fallback-active");
+            }}
+          />
+          <span className="absolute text-6xl font-bold text-white/50 font-[family-name:var(--font-playfair)] pointer-events-none hidden [.fallback-active>&]:block">
+            #{artist.id}
+          </span>
 
           {/* Close button */}
           <button
@@ -55,6 +59,12 @@ export default function ArtistPanel({ artist, onClose }: ArtistPanelProps) {
         <div className="p-5 pb-8">
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5 mb-3">
+            <span
+              className="text-[0.6rem] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full text-white"
+              style={{ backgroundColor: region.color }}
+            >
+              {region.shortName}
+            </span>
             {artist.isNew && (
               <span className="text-[0.6rem] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full bg-new-bg text-new-text">
                 Ny 2026
@@ -79,8 +89,15 @@ export default function ArtistPanel({ artist, onClose }: ArtistPanelProps) {
           <h2 className="font-[family-name:var(--font-playfair)] text-2xl font-bold leading-tight mb-1">
             {artist.name}
           </h2>
-          <p className="text-sm text-accent font-medium mb-4">
+          <p className="text-sm text-accent font-medium mb-3">
             {artist.technique}
+          </p>
+
+          {/* Summary */}
+          <p className="text-sm text-warm leading-relaxed mb-4">
+            {artist.isHall
+              ? `Samlingsutställning med alla ${86} deltagande konstnärer i Konstrundan 2026. Öppet lör–sön och helgdagar 10–18, vardagar 13–17. Entré: 100 kr, fri entré under 18 år.`
+              : `${artist.name} arbetar med ${artist.technique.toLowerCase()} och ställer ut i sin ateljé i ${artist.location} under Konstrundan 3–12 april 2026.${artist.isNew ? " Ny medlem i ÖSKГ i år!" : ""}`}
           </p>
 
           {/* Divider */}
@@ -129,7 +146,7 @@ export default function ArtistPanel({ artist, onClose }: ArtistPanelProps) {
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2">
             <a
-              href={`https://www.google.com/maps/directions/?api=1&destination=${artist.lat},${artist.lng}`}
+              href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(artist.address + ", " + artist.location + ", Sverige")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-ink text-paper text-sm font-semibold hover:bg-accent transition-colors"

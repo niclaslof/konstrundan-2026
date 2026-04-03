@@ -1,0 +1,578 @@
+[
+  {
+    "id": 139,
+    "name": "Albihn Anna-Karin",
+    "location": "Ekeby",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 3,
+    "name": "Anderberg Torgil",
+    "location": "",
+    "technique": "KERAMIK, DESIGN, SKULPTUR"
+  },
+  {
+    "id": 4,
+    "name": "Anders Bengt",
+    "location": "Landskrona",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 1,
+    "name": "Andersson Sonja E.M.",
+    "location": "Höganäs",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 9,
+    "name": "Arvidsson Karin",
+    "location": "Ängelholm",
+    "technique": "MÅLERI, GRAFIK"
+  },
+  {
+    "id": 10,
+    "name": "Assarsson Kristina",
+    "location": "Mörarp",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 141,
+    "name": "Belfrage Mohlin Mimi",
+    "location": "Mölle",
+    "technique": "MÅLERI, GRAFIK"
+  },
+  {
+    "id": 32,
+    "name": "Bentinger Ida",
+    "location": "Munka Ljungby",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 14,
+    "name": "Bergsten Ingegärd",
+    "location": "Väsby / Höganäs",
+    "technique": "MÅLERI, TEXTIL"
+  },
+  {
+    "id": 16,
+    "name": "Bertmar Mikael",
+    "location": "Båstad",
+    "technique": "FOTOKONST"
+  },
+  {
+    "id": 17,
+    "name": "Billing Göran",
+    "location": "Ängelholm",
+    "technique": "MÅLERI, GRAFIK"
+  },
+  {
+    "id": 42,
+    "name": "Bjärntoft Johan",
+    "location": "Ängelholm",
+    "technique": "KERAMIK"
+  },
+  {
+    "id": 18,
+    "name": "Björstedt Inga",
+    "location": "Vallåkra",
+    "technique": "MÅLERI, TECKNING"
+  },
+  {
+    "id": 20,
+    "name": "Bolinder Kjell",
+    "location": "Höganäs",
+    "technique": "KERAMIK"
+  },
+  {
+    "id": 173,
+    "name": "Brenner Remberg Elisabeth",
+    "location": "Höganäs",
+    "technique": "FIBERART"
+  },
+  {
+    "id": 21,
+    "name": "Brosbøl Hansen Bente",
+    "location": "Kågeröd",
+    "technique": "KERAMIK"
+  },
+  {
+    "id": 174,
+    "name": "Bygdemark Lars",
+    "location": "Vejbyslätt",
+    "technique": "FOTOKONST"
+  },
+  {
+    "id": 8,
+    "name": "Cederqvist Jasmine",
+    "location": "Ljungbyhed",
+    "technique": "MÅLERI, FOTOKONST"
+  },
+  {
+    "id": 37,
+    "name": "Curling Eriksson Victoria",
+    "location": "Viken",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 24,
+    "name": "Cronström Lena",
+    "location": "Arild",
+    "technique": "MÅLERI, TEXTIL, GLASOBJEKT"
+  },
+  {
+    "id": 27,
+    "name": "Ekberg Jill",
+    "location": "Vejbystrand",
+    "technique": "KERAMIK"
+  },
+  {
+    "id": 29,
+    "name": "Eklund Ulf",
+    "location": "Viken",
+    "technique": "MÅLERI, GRAFIK, TECKNING"
+  },
+  {
+    "id": 30,
+    "name": "Ekman Krister",
+    "location": "Hov",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 36,
+    "name": "Ekros Per",
+    "location": "Ödåkra",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 31,
+    "name": "Eldin-Lindstén Pia",
+    "location": "Strandbaden",
+    "technique": "MÅLERI, KERAMIK, TEXTIL, SMYCKEN"
+  },
+  {
+    "id": 35,
+    "name": "Eriksson Ulf",
+    "location": "Mörarp",
+    "technique": "MÅLERI, GRAFIK"
+  },
+  {
+    "id": 175,
+    "name": "Ferm Morgan",
+    "location": "Väsby/Höganäs",
+    "technique": "SKULPTUR"
+  },
+  {
+    "id": 26,
+    "name": "Fohlin-Svanberg Paula",
+    "location": "Höganäs",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 40,
+    "name": "Fuglesang Kareld Zoli",
+    "location": "Helsingborg",
+    "technique": "MÅLERI, TEXTIL"
+  },
+  {
+    "id": 127,
+    "name": "Gratacos Mueller Carolin",
+    "location": "Höganäs",
+    "technique": "TEXTIL, MÅLERI"
+  },
+  {
+    "id": 44,
+    "name": "Gustafsson Katarina",
+    "location": "Tågarp",
+    "technique": "SKULPTUR, KERAMIK"
+  },
+  {
+    "id": 45,
+    "name": "Gärtner Jenny",
+    "location": "Helsingborg",
+    "technique": "MÅLERI, TECKNING"
+  },
+  {
+    "id": 46,
+    "name": "Göransson Peter",
+    "location": "Farhult",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 56,
+    "name": "Hansson Rebeka",
+    "location": "Båstad",
+    "technique": "KERAMIK, SLÖJD"
+  },
+  {
+    "id": 49,
+    "name": "Hedberg Charlotte",
+    "location": "Båstad",
+    "technique": "MÅLERI, FOTOKONST, SILVERSMIDE"
+  },
+  {
+    "id": 54,
+    "name": "Hnatiuk Olena",
+    "location": "Skäret",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 51,
+    "name": "Husberg Katinka",
+    "location": "",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 55,
+    "name": "Jadéus Per",
+    "location": "Ljungbyhed",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 57,
+    "name": "Jardeback Olesen Susanne",
+    "location": "Ask/Röstånga",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 91,
+    "name": "Johansson Thor-Björn",
+    "location": "Landskrona",
+    "technique": "FOTOKONST"
+  },
+  {
+    "id": 58,
+    "name": "Jönsson Britt",
+    "location": "Klippan",
+    "technique": "MÅLERI, TEXTIL"
+  },
+  {
+    "id": 59,
+    "name": "Jönsson Amos Christel",
+    "location": "Mölle",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 63,
+    "name": "Khan Christel",
+    "location": "Förslöv",
+    "technique": "KERAMIK, SKULPTUR, MÅLERI"
+  },
+  {
+    "id": 64,
+    "name": "Kiyota Malm Yayoi",
+    "location": "Höganäs",
+    "technique": "SKULPTUR, KERAMIK, TECKNING"
+  },
+  {
+    "id": 162,
+    "name": "Knochenhauer Izabela",
+    "location": "Landskrona",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 164,
+    "name": "Koller Lena",
+    "location": "Höganäs",
+    "technique": "FOTOKONST"
+  },
+  {
+    "id": 66,
+    "name": "Kraitz Cecilia",
+    "location": "Båstad",
+    "technique": "MÅLERI, KERAMIK, COLLAGE"
+  },
+  {
+    "id": 171,
+    "name": "Krantz Margareta",
+    "location": "Båstad",
+    "technique": "TEXTIL"
+  },
+  {
+    "id": 71,
+    "name": "Larsson Ullastina",
+    "location": "Landskrona",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 72,
+    "name": "Liljeqvist Birgitta",
+    "location": "Glumslöv",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 73,
+    "name": "Liljeqvist Mikael",
+    "location": "Glumslöv",
+    "technique": "MÅLERI, SKULPTUR, DESIGN"
+  },
+  {
+    "id": 74,
+    "name": "Lindh Christina",
+    "location": "Ängelholm",
+    "technique": "MÅLERI, GRAFIK, NÄTINST."
+  },
+  {
+    "id": 77,
+    "name": "Luka Fred Zoran",
+    "location": "Helsingborg",
+    "technique": "SKULPTUR, MÅLERI, 3-D PRINT"
+  },
+  {
+    "id": 78,
+    "name": "Lundström Chrissie",
+    "location": "Helsingborg",
+    "technique": "MÅLERI, SKULPTUR"
+  },
+  {
+    "id": 80,
+    "name": "Löfgren Lillemor",
+    "location": "Mölle",
+    "technique": "MÅLERI, SKULPTUR"
+  },
+  {
+    "id": 170,
+    "name": "Modén Inga",
+    "location": "Skäret",
+    "technique": "MÅLERI, GLASKONST"
+  },
+  {
+    "id": 82,
+    "name": "Montelius Tomas",
+    "location": "Mjöhult",
+    "technique": "FOTOKONST"
+  },
+  {
+    "id": 83,
+    "name": "Montelius Grifó Maria",
+    "location": "Mjöhult",
+    "technique": "MÅLERI, GRAFIK"
+  },
+  {
+    "id": 84,
+    "name": "Müller Lindberg Karin",
+    "location": "Laröd",
+    "technique": "MÅLERI, GRAFIK, TECKNING"
+  },
+  {
+    "id": 85,
+    "name": "Nakajima Yoshio",
+    "location": "Helsingborg",
+    "technique": "MÅLERI, KERAMIK. SKULPTUR, GRAFIK, TECKNING"
+  },
+  {
+    "id": 94,
+    "name": "Nedrup Tim",
+    "location": "Höganäs",
+    "technique": "MÅLERI, SKULPTUR"
+  },
+  {
+    "id": 86,
+    "name": "Nelander-Juntunen Eva",
+    "location": "Landskrona",
+    "technique": "TEXTIL, MÅLERI"
+  },
+  {
+    "id": 90,
+    "name": "Nilmén Gunnar",
+    "location": "Mölle",
+    "technique": "GRAFIK"
+  },
+  {
+    "id": 88,
+    "name": "Nilsson Sofia",
+    "location": "Ängelholm",
+    "technique": "KERAMIK, SKULPTUR"
+  },
+  {
+    "id": 180,
+    "name": "Nilsson Vincent",
+    "location": "Ängelholm",
+    "technique": "MÅLERI, KERAMIK"
+  },
+  {
+    "id": 120,
+    "name": "Nyborg Asle",
+    "location": "Höganäs",
+    "technique": "MÅLERI, GRAFIK"
+  },
+  {
+    "id": 92,
+    "name": "Olsson Lena",
+    "location": "Landskrona",
+    "technique": "SKULPTUR, KERAMIK"
+  },
+  {
+    "id": 93,
+    "name": "Olsson Mattias",
+    "location": "Höganäs",
+    "technique": "MÅLERI, GRAFIK, TECKNING"
+  },
+  {
+    "id": 95,
+    "name": "Oxenblå Harry",
+    "location": "Höganäs",
+    "technique": "MÅLERI, SKULPTUR, KERAMIK"
+  },
+  {
+    "id": 100,
+    "name": "Persson Katriona S. W.",
+    "location": "Båstad",
+    "technique": "GRAFIK, MÅLERI"
+  },
+  {
+    "id": 105,
+    "name": "Pettersson Lars",
+    "location": "Övarp/Klippan",
+    "technique": "SKULPTUR, SMIDE"
+  },
+  {
+    "id": 109,
+    "name": "Rosengren Birgit",
+    "location": "Ängelholm",
+    "technique": "GRAFIK"
+  },
+  {
+    "id": 112,
+    "name": "Ryberg Gunilla",
+    "location": "Hallavara, Båstad",
+    "technique": "MÅLERI, TECKNING, COLLAGE"
+  },
+  {
+    "id": 114,
+    "name": "Rödseth Eva",
+    "location": "Landskrona",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 149,
+    "name": "Saito Kiwa",
+    "location": "Höganäs",
+    "technique": "TEXTIL"
+  },
+  {
+    "id": 110,
+    "name": "Sandkvist Jim",
+    "location": "Vejbystrand",
+    "technique": "FOTOKONST"
+  },
+  {
+    "id": 144,
+    "name": "Sarri Ola",
+    "location": "Båstad",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 115,
+    "name": "Sassanian Azita",
+    "location": "Helsingborg",
+    "technique": "MÅLERI, SKULPTUR, KERAMIK, GRAFIK"
+  },
+  {
+    "id": 116,
+    "name": "Segerfalk Mary",
+    "location": "Råå",
+    "technique": "MÅLERI, TEXTIL, OBJEKT, MIX MEDIA"
+  },
+  {
+    "id": 117,
+    "name": "Segerson Anders",
+    "location": "Båstad",
+    "technique": "MÅLERI, SKÅP"
+  },
+  {
+    "id": 156,
+    "name": "Severinson Martin",
+    "location": "Lerberget",
+    "technique": "MÅLERI, GRAFIK, TECKNING, FOTOKONST, TEXT"
+  },
+  {
+    "id": 138,
+    "name": "Sthen Helena",
+    "location": "Förslöv",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 121,
+    "name": "Sundin Gustav",
+    "location": "Torekov",
+    "technique": "MÅLERI, GRAFIK"
+  },
+  {
+    "id": 168,
+    "name": "Svanberg Christer",
+    "location": "Höganäs",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 142,
+    "name": "Svennbeck Lie",
+    "location": "Kvidinge",
+    "technique": "MÅLERI, OBJEKT"
+  },
+  {
+    "id": 124,
+    "name": "Svensson Birgitta",
+    "location": "Kvidinge",
+    "technique": "KERAMIK"
+  },
+  {
+    "id": 128,
+    "name": "Thorstensson Katarina",
+    "location": "Båstad",
+    "technique": "GLAS, SMYCKEN"
+  },
+  {
+    "id": 158,
+    "name": "Tryggmo Gunnar",
+    "location": "Viken",
+    "technique": "MÅLERI, TECKNING"
+  },
+  {
+    "id": 159,
+    "name": "Tvingmark Camilla",
+    "location": "Viken",
+    "technique": "MÅLERI, GRAFIK, TECKNING, SKULPTUR"
+  },
+  {
+    "id": 130,
+    "name": "Unnaryd Schönhult A",
+    "location": "Vejbystrand",
+    "technique": "MÅLERI, GRAFIK"
+  },
+  {
+    "id": 161,
+    "name": "Vagner Tomas",
+    "location": "Ödåkra",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 132,
+    "name": "Wellbro Kerstin",
+    "location": "Ängelbäcksstrand",
+    "technique": "MÅLERI, GRAFIK, GLAS"
+  },
+  {
+    "id": 133,
+    "name": "White Susanna",
+    "location": "Mölle",
+    "technique": "MÅLERI"
+  },
+  {
+    "id": 165,
+    "name": "Widegren Maria",
+    "location": "Ängelholm",
+    "technique": "KERAMIK"
+  },
+  {
+    "id": 134,
+    "name": "Wingårdh Ebba Kristina",
+    "location": "Ängelholm",
+    "technique": "MÅLERI, TECKNING"
+  },
+  {
+    "id": 135,
+    "name": "Wohlfart Lisa",
+    "location": "Mölle",
+    "technique": "KERAMIK"
+  }
+]

@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback, useRef } from "react";
 import { APIProvider, Map as GoogleMap, useMap } from "@vis.gl/react-google-maps";
-import { Artist } from "@/lib/types";
+import { Artist, REGIONS } from "@/lib/types";
 
 interface MapProps {
   artists: Artist[];
@@ -31,7 +31,8 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist }: MapProps) {
     markersRef.current = [];
 
     artists.forEach((artist) => {
-      const isHall = artist.isHall;
+      const region = REGIONS[artist.regionId];
+      const pinColor = artist.isHall ? "#991b1b" : region.color;
       const marker = new google.maps.Marker({
         position: { lat: artist.lat, lng: artist.lng },
         map,
@@ -44,7 +45,7 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist }: MapProps) {
         },
         icon: {
           path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z",
-          fillColor: isHall ? "#991b1b" : "#b45309",
+          fillColor: pinColor,
           fillOpacity: 1,
           strokeColor: "#fff",
           strokeWeight: 2,
@@ -66,18 +67,21 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist }: MapProps) {
 
   // Highlight selected marker
   useEffect(() => {
-    markersRef.current.forEach((marker) => {
+    markersRef.current.forEach((marker, idx) => {
+      const artist = artists[idx];
+      if (!artist) return;
       const isSelected = marker.getTitle() === selectedArtist?.name;
+      const region = REGIONS[artist.regionId];
       const icon = marker.getIcon() as google.maps.Symbol;
       if (icon) {
         marker.setIcon({
           ...icon,
-          fillColor: isSelected ? "#d97706" : marker.getTitle() === "Tjörnedala konsthall" ? "#991b1b" : "#b45309",
+          fillColor: isSelected ? "#d97706" : artist.isHall ? "#991b1b" : region.color,
           scale: isSelected ? 2 : 1.5,
         });
       }
     });
-  }, [selectedArtist]);
+  }, [selectedArtist, artists]);
 
   return null;
 }
