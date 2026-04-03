@@ -42,6 +42,11 @@ help: ## Show this help message
 	@echo "    make dev            Start Next.js dev server (http://localhost:3000)"
 	@echo "    make build          Production build"
 	@echo ""
+	@echo "  DEPLOY (dev -> master)"
+	@echo "    make dev-push       Commit + push to dev (Vercel preview URL)"
+	@echo "    make promote        Merge dev to master (production deploy)"
+	@echo "    make deploy         dev-push + promote in one step"
+	@echo ""
 	@echo "  DATA PIPELINE - SCRAPING"
 	@echo "    make scrape-all     Run all automated scrapers"
 	@echo "    make scrape-ostra   Extract Ostra Skane artists from PDF"
@@ -99,9 +104,27 @@ dev:
 build:
 	$(NPM) run build
 
-deploy:
-	git add -A && git commit -m "Deploy" --allow-empty && git push
-	npx vercel --prod --yes
+# ──────────────────────────────────────────────
+# Git Workflow: dev → master
+# ──────────────────────────────────────────────
+# dev branch  = test/staging (Vercel preview URL)
+# master      = production   (konstrundan-2026.vercel.app)
+
+dev-push:
+	@echo "Pushing to dev (preview deploy)..."
+	git add -A
+	git diff --cached --quiet || git commit -m "Update dev"
+	git push origin dev
+
+promote:
+	@echo "Promoting dev to production..."
+	git checkout master
+	git merge dev --no-edit
+	git push origin master
+	git checkout dev
+	@echo "Production updated!"
+
+deploy: dev-push promote
 
 # ──────────────────────────────────────────────
 # Data Pipeline – Scraping
