@@ -122,6 +122,10 @@ export default function MapComponent({ artists, selectedArtist, onSelectArtist, 
           defaultZoom={10}
           gestureHandling="greedy"
           disableDefaultUI={false}
+          mapTypeControl={true}
+          zoomControl={true}
+          streetViewControl={false}
+          fullscreenControl={true}
           className="w-full h-full"
           styles={[
             { elementType: "geometry", stylers: [{ color: "#f5f0eb" }] },

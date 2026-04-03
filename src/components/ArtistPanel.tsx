@@ -1,6 +1,7 @@
 "use client";
 
 import { Artist, REGIONS } from "@/lib/types";
+import descriptions from "@/data/descriptions.json";
 
 interface ArtistPanelProps {
   artist: Artist | null;
@@ -112,11 +113,12 @@ export default function ArtistPanel({
             {artist.technique}
           </p>
 
-          {/* Summary */}
+          {/* AI Description or fallback */}
           <p className="text-sm text-warm leading-relaxed mb-4">
-            {artist.isHall
-              ? `Samlingsutställning med alla ${86} deltagande konstnärer i Konstrundan 2026. Öppet lör–sön och helgdagar 10–18, vardagar 13–17. Entré: 100 kr, fri entré under 18 år.`
-              : `${artist.name} arbetar med ${artist.technique.toLowerCase()} och ställer ut i sin ateljé i ${artist.location} under Konstrundan 3–12 april 2026.${artist.isNew ? " Ny medlem i ÖSKГ i år!" : ""}`}
+            {(descriptions as Record<string, string>)[`${artist.regionId}-${artist.id}`] ||
+              (artist.isHall
+                ? `Samlingsutställning med alla deltagande konstnärer i Konstrundan 2026. Öppet lör–sön och helgdagar 10–18, vardagar 13–17. Entré: 100 kr, fri entré under 18 år.`
+                : `${artist.name} arbetar med ${artist.technique.toLowerCase()} och ställer ut i sin ateljé i ${artist.location} under Konstrundan 3–12 april 2026.${artist.isNew ? " Ny medlem i ÖSKГ i år!" : ""}`)}
           </p>
 
           {/* Divider */}
