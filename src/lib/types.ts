@@ -30,6 +30,9 @@ export interface Artist {
   isHall?: boolean;
   imageUrl?: string;
   description?: string;
+  aiDescription?: string;
+  /** @internal Address geocoding confidence – not shown to users */
+  addressConfidence?: "verified" | "city" | "approximate" | "unknown";
 }
 
 export type TechniqueFilter =

@@ -7,9 +7,9 @@ import MapComponent from "@/components/Map";
 import ArtistPanel from "@/components/ArtistPanel";
 import ArtistList from "@/components/ArtistList";
 import { allArtists } from "@/data/artists";
-import { Artist, RegionId, TechniqueFilter, REGIONS } from "@/lib/types";
+import { Artist, RegionId, TechniqueFilter } from "@/lib/types";
+import { useFavorites } from "@/lib/useFavorites";
 
-// Determine which regions actually have data
 const availableRegions = [
   ...new Set(allArtists.map((a) => a.regionId)),
 ] as RegionId[];
@@ -21,11 +21,14 @@ export default function Home() {
     useState<RegionId[]>(availableRegions);
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
   const [listOpen, setListOpen] = useState(false);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+
+  const { favorites, favoriteCount, toggleFavorite, isFavorite } =
+    useFavorites();
 
   const handleRegionToggle = (regionId: RegionId) => {
     setActiveRegions((prev) => {
       if (prev.includes(regionId)) {
-        // Don't allow deselecting all
         if (prev.length === 1) return prev;
         return prev.filter((r) => r !== regionId);
       }
@@ -36,26 +39,30 @@ export default function Home() {
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
     return allArtists.filter((a) => {
-      const matchesRegion = activeRegions.includes(a.regionId);
+      if (showFavoritesOnly && !isFavorite(a.regionId, a.id)) return false;
 
+      const matchesRegion = activeRegions.includes(a.regionId);
       const matchesSearch =
         !q ||
         a.name.toLowerCase().includes(q) ||
         a.technique.toLowerCase().includes(q) ||
         a.address.toLowerCase().includes(q) ||
         a.location.toLowerCase().includes(q);
-
       const matchesFilter =
         activeFilter === "all" ||
         a.technique.toLowerCase().includes(activeFilter.toLowerCase());
 
       return matchesRegion && matchesSearch && matchesFilter;
     });
-  }, [query, activeFilter, activeRegions]);
+  }, [query, activeFilter, activeRegions, showFavoritesOnly, isFavorite]);
 
   return (
     <>
-      <Header artistCount={filtered.length} activeRegions={activeRegions} />
+      <Header
+        artistCount={filtered.length}
+        activeRegions={activeRegions}
+        favoriteCount={favoriteCount}
+      />
       <SearchBar
         query={query}
         onQueryChange={setQuery}
@@ -64,17 +71,30 @@ export default function Home() {
         activeRegions={activeRegions}
         onRegionToggle={handleRegionToggle}
         availableRegions={availableRegions}
+        showFavoritesOnly={showFavoritesOnly}
+        onToggleFavorites={() => setShowFavoritesOnly(!showFavoritesOnly)}
+        favoriteCount={favoriteCount}
       />
 
       <MapComponent
         artists={filtered}
         selectedArtist={selectedArtist}
         onSelectArtist={setSelectedArtist}
+        isFavorite={isFavorite}
       />
 
       <ArtistPanel
         artist={selectedArtist}
         onClose={() => setSelectedArtist(null)}
+        isFavorite={
+          selectedArtist
+            ? isFavorite(selectedArtist.regionId, selectedArtist.id)
+            : false
+        }
+        onToggleFavorite={() => {
+          if (selectedArtist)
+            toggleFavorite(selectedArtist.regionId, selectedArtist.id);
+        }}
       />
 
       <ArtistList
@@ -82,6 +102,8 @@ export default function Home() {
         isOpen={listOpen}
         onClose={() => setListOpen(false)}
         onSelect={setSelectedArtist}
+        isFavorite={isFavorite}
+        onToggleFavorite={toggleFavorite}
       />
 
       {/* Bottom bar */}

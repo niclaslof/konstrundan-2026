@@ -10,6 +10,9 @@ interface SearchBarProps {
   activeRegions: RegionId[];
   onRegionToggle: (r: RegionId) => void;
   availableRegions: RegionId[];
+  showFavoritesOnly: boolean;
+  onToggleFavorites: () => void;
+  favoriteCount: number;
 }
 
 export default function SearchBar({
@@ -20,6 +23,9 @@ export default function SearchBar({
   activeRegions,
   onRegionToggle,
   availableRegions,
+  showFavoritesOnly,
+  onToggleFavorites,
+  favoriteCount,
 }: SearchBarProps) {
   return (
     <div className="fixed top-[52px] left-0 right-0 z-40 bg-paper/95 backdrop-blur-sm border-b border-stone-200 px-3 py-2 md:px-6">
@@ -32,6 +38,20 @@ export default function SearchBar({
           placeholder="Sök konstnär, ort, teknik..."
           className="px-3 py-2 rounded-lg border border-stone-300 text-sm w-44 md:w-56 bg-white outline-none focus:border-accent transition-colors"
         />
+
+        {/* Favorites filter */}
+        {favoriteCount > 0 && (
+          <button
+            onClick={onToggleFavorites}
+            className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              showFavoritesOnly
+                ? "bg-amber-500 text-white border-amber-500"
+                : "bg-white border-amber-400 text-amber-600 hover:bg-amber-50"
+            }`}
+          >
+            ♥ {favoriteCount}
+          </button>
+        )}
 
         {/* Region filter buttons */}
         {availableRegions.map((rid) => {

@@ -5,9 +5,16 @@ import { Artist, REGIONS } from "@/lib/types";
 interface ArtistPanelProps {
   artist: Artist | null;
   onClose: () => void;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
 }
 
-export default function ArtistPanel({ artist, onClose }: ArtistPanelProps) {
+export default function ArtistPanel({
+  artist,
+  onClose,
+  isFavorite,
+  onToggleFavorite,
+}: ArtistPanelProps) {
   if (!artist) return null;
 
   const techniqueTags = artist.technique.split(",").map((t) => t.trim());
@@ -45,6 +52,18 @@ export default function ArtistPanel({ artist, onClose }: ArtistPanelProps) {
           <span className="absolute text-6xl font-bold text-white/50 font-[family-name:var(--font-playfair)] pointer-events-none hidden [.fallback-active>&]:block">
             #{artist.id}
           </span>
+
+          {/* Favorite button */}
+          <button
+            onClick={onToggleFavorite}
+            className={`absolute top-3 left-3 w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer text-lg ${
+              isFavorite
+                ? "bg-amber-500 text-white shadow-[0_0_12px_rgba(245,158,11,0.5)]"
+                : "bg-black/40 hover:bg-amber-500/80 text-white/80 hover:text-white"
+            }`}
+          >
+            {isFavorite ? "♥" : "♡"}
+          </button>
 
           {/* Close button */}
           <button

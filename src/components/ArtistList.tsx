@@ -7,6 +7,8 @@ interface ArtistListProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (artist: Artist) => void;
+  isFavorite: (regionId: string, artistId: number) => boolean;
+  onToggleFavorite: (regionId: string, artistId: number) => void;
 }
 
 export default function ArtistList({
@@ -14,6 +16,8 @@ export default function ArtistList({
   isOpen,
   onClose,
   onSelect,
+  isFavorite,
+  onToggleFavorite,
 }: ArtistListProps) {
   return (
     <>
@@ -40,22 +44,24 @@ export default function ArtistList({
         <div>
           {artists
             .sort((a, b) => a.id - b.id)
-            .map((artist) => (
+            .map((artist) => {
+              const fav = isFavorite(artist.regionId, artist.id);
+              return (
               <div
-                key={artist.id}
+                key={`${artist.regionId}-${artist.id}`}
                 onClick={() => {
                   onSelect(artist);
                   onClose();
                 }}
-                className="flex items-center gap-3 px-4 py-2.5 border-b border-stone-100 cursor-pointer hover:bg-tag-bg transition-colors"
+                className={`flex items-center gap-3 px-4 py-2.5 border-b border-stone-100 cursor-pointer hover:bg-tag-bg transition-colors ${fav ? "bg-amber-50" : ""}`}
               >
                 <span
-                  className="w-7 h-7 rounded-full text-white flex items-center justify-center text-[0.6rem] font-bold shrink-0"
+                  className={`w-7 h-7 rounded-full text-white flex items-center justify-center text-[0.6rem] font-bold shrink-0 ${fav ? "ring-2 ring-amber-400" : ""}`}
                   style={{ backgroundColor: REGIONS[artist.regionId].color }}
                 >
                   {artist.id}
                 </span>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="font-semibold text-xs text-ink truncate">
                     {artist.name}
                     {artist.isNew && (
@@ -66,8 +72,20 @@ export default function ArtistList({
                     {artist.technique}
                   </div>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleFavorite(artist.regionId, artist.id);
+                  }}
+                  className={`shrink-0 w-6 h-6 flex items-center justify-center text-sm cursor-pointer transition-colors ${
+                    fav ? "text-amber-500" : "text-stone-300 hover:text-amber-400"
+                  }`}
+                >
+                  {fav ? "♥" : "♡"}
+                </button>
               </div>
-            ))}
+              );
+            })}
         </div>
       </div>
     </>

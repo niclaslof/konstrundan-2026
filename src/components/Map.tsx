@@ -8,9 +8,10 @@ interface MapProps {
   artists: Artist[];
   selectedArtist: Artist | null;
   onSelectArtist: (artist: Artist) => void;
+  isFavorite?: (regionId: string, artistId: number) => boolean;
 }
 
-function MarkerLayer({ artists, selectedArtist, onSelectArtist }: MapProps) {
+function MarkerLayer({ artists, selectedArtist, onSelectArtist, isFavorite }: MapProps) {
   const map = useMap();
   const markersRef = useRef<google.maps.Marker[]>([]);
 
@@ -33,22 +34,23 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist }: MapProps) {
     artists.forEach((artist) => {
       const region = REGIONS[artist.regionId];
       const pinColor = artist.isHall ? "#991b1b" : region.color;
+      const fav = isFavorite?.(artist.regionId, artist.id) ?? false;
       const marker = new google.maps.Marker({
         position: { lat: artist.lat, lng: artist.lng },
         map,
         title: artist.name,
         label: {
-          text: String(artist.id),
+          text: fav ? "♥" : String(artist.id),
           color: "#fff",
           fontWeight: "700",
-          fontSize: "10px",
+          fontSize: fav ? "12px" : "10px",
         },
         icon: {
           path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z",
           fillColor: pinColor,
           fillOpacity: 1,
-          strokeColor: "#fff",
-          strokeWeight: 2,
+          strokeColor: fav ? "#f59e0b" : "#fff",
+          strokeWeight: fav ? 3 : 2,
           scale: 1.5,
           anchor: new google.maps.Point(12, 22),
           labelOrigin: new google.maps.Point(12, 9),
@@ -71,22 +73,31 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist }: MapProps) {
       const artist = artists[idx];
       if (!artist) return;
       const isSelected = marker.getTitle() === selectedArtist?.name;
+      const fav = isFavorite?.(artist.regionId, artist.id) ?? false;
       const region = REGIONS[artist.regionId];
       const icon = marker.getIcon() as google.maps.Symbol;
       if (icon) {
         marker.setIcon({
           ...icon,
           fillColor: isSelected ? "#d97706" : artist.isHall ? "#991b1b" : region.color,
-          scale: isSelected ? 2 : 1.5,
+          strokeColor: fav ? "#f59e0b" : "#fff",
+          strokeWeight: fav ? 3 : 2,
+          scale: isSelected ? 2 : fav ? 1.8 : 1.5,
+        });
+        marker.setLabel({
+          text: fav ? "♥" : String(artist.id),
+          color: "#fff",
+          fontWeight: "700",
+          fontSize: fav ? "12px" : "10px",
         });
       }
     });
-  }, [selectedArtist, artists]);
+  }, [selectedArtist, artists, isFavorite]);
 
   return null;
 }
 
-export default function MapComponent({ artists, selectedArtist, onSelectArtist }: MapProps) {
+export default function MapComponent({ artists, selectedArtist, onSelectArtist, isFavorite }: MapProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
   if (!apiKey) {
@@ -127,6 +138,7 @@ export default function MapComponent({ artists, selectedArtist, onSelectArtist }
             artists={artists}
             selectedArtist={selectedArtist}
             onSelectArtist={onSelectArtist}
+            isFavorite={isFavorite}
           />
         </GoogleMap>
       </APIProvider>
