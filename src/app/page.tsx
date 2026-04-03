@@ -7,7 +7,7 @@ import MapComponent from "@/components/Map";
 import ArtistPanel from "@/components/ArtistPanel";
 import ArtistList from "@/components/ArtistList";
 import { allArtists } from "@/data/artists";
-import { Artist, RegionId, TechniqueFilter } from "@/lib/types";
+import { Artist, RegionId, TechniqueFilter, techniques } from "@/lib/types";
 import { useFavorites } from "@/lib/useFavorites";
 
 const availableRegions = [
@@ -16,7 +16,7 @@ const availableRegions = [
 
 export default function Home() {
   const [query, setQuery] = useState("");
-  const [activeFilter, setActiveFilter] = useState<TechniqueFilter>("all");
+  const [activeFilters, setActiveFilters] = useState<TechniqueFilter[]>([]);
   const [activeRegions, setActiveRegions] =
     useState<RegionId[]>(availableRegions);
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
@@ -49,12 +49,14 @@ export default function Home() {
         a.address.toLowerCase().includes(q) ||
         a.location.toLowerCase().includes(q);
       const matchesFilter =
-        activeFilter === "all" ||
-        a.technique.toLowerCase().includes(activeFilter.toLowerCase());
+        activeFilters.length === 0 ||
+        activeFilters.some((f) =>
+          a.technique.toLowerCase().includes(f.toLowerCase())
+        );
 
       return matchesRegion && matchesSearch && matchesFilter;
     });
-  }, [query, activeFilter, activeRegions, showFavoritesOnly, isFavorite]);
+  }, [query, activeFilters, activeRegions, showFavoritesOnly, isFavorite]);
 
   return (
     <>
@@ -66,8 +68,13 @@ export default function Home() {
       <SearchBar
         query={query}
         onQueryChange={setQuery}
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
+        activeFilters={activeFilters}
+        onFilterToggle={(f: TechniqueFilter) => {
+          setActiveFilters((prev) =>
+            prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]
+          );
+        }}
+        onClearFilters={() => setActiveFilters([])}
         activeRegions={activeRegions}
         onRegionToggle={handleRegionToggle}
         availableRegions={availableRegions}

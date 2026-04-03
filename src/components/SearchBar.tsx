@@ -5,8 +5,9 @@ import { RegionId, REGIONS, TechniqueFilter, techniques } from "@/lib/types";
 interface SearchBarProps {
   query: string;
   onQueryChange: (q: string) => void;
-  activeFilter: TechniqueFilter;
-  onFilterChange: (f: TechniqueFilter) => void;
+  activeFilters: TechniqueFilter[];
+  onFilterToggle: (f: TechniqueFilter) => void;
+  onClearFilters: () => void;
   activeRegions: RegionId[];
   onRegionToggle: (r: RegionId) => void;
   availableRegions: RegionId[];
@@ -18,8 +19,9 @@ interface SearchBarProps {
 export default function SearchBar({
   query,
   onQueryChange,
-  activeFilter,
-  onFilterChange,
+  activeFilters,
+  onFilterToggle,
+  onClearFilters,
   activeRegions,
   onRegionToggle,
   availableRegions,
@@ -77,30 +79,33 @@ export default function SearchBar({
         {/* Separator */}
         <div className="w-px h-5 bg-stone-300 mx-1 hidden md:block" />
 
-        {/* Technique filter */}
+        {/* Technique filters – multi-select */}
         <button
-          onClick={() => onFilterChange("all")}
+          onClick={onClearFilters}
           className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
-            activeFilter === "all"
+            activeFilters.length === 0
               ? "bg-ink text-white border-ink"
               : "bg-white border-stone-300 hover:border-ink hover:text-ink"
           }`}
         >
           Alla tekniker
         </button>
-        {techniques.map((t) => (
-          <button
-            key={t}
-            onClick={() => onFilterChange(t as TechniqueFilter)}
-            className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              activeFilter === t
-                ? "bg-ink text-white border-ink"
-                : "bg-white border-stone-300 hover:border-ink hover:text-ink"
-            }`}
-          >
-            {t}
-          </button>
-        ))}
+        {techniques.map((t) => {
+          const isActive = activeFilters.includes(t as TechniqueFilter);
+          return (
+            <button
+              key={t}
+              onClick={() => onFilterToggle(t as TechniqueFilter)}
+              className={`px-3 py-1.5 rounded-full border text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                isActive
+                  ? "bg-ink text-white border-ink"
+                  : "bg-white border-stone-300 hover:border-ink hover:text-ink"
+              }`}
+            >
+              {t}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
