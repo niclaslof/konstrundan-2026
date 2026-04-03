@@ -20,9 +20,59 @@ NPM = npm
 # Setup
 # ──────────────────────────────────────────────
 
-.PHONY: setup setup-python setup-node dev build all clean
+.PHONY: help setup setup-python setup-node dev build all clean
 .PHONY: scrape-all scrape-ostra scrape-vskg scrape-nordvastra scrape-mittskane scrape-sydvastra
 .PHONY: geocode images pipeline
+
+# ──────────────────────────────────────────────
+# Help
+# ──────────────────────────────────────────────
+
+help: ## Show this help message
+	@echo ""
+	@echo "  Konstrundan 2026 - Makefile"
+	@echo "  ═══════════════════════════════════════════"
+	@echo ""
+	@echo "  SETUP"
+	@echo "    make setup          Create .venv, install Python + Node deps"
+	@echo "    make setup-python   Python venv + pip install only"
+	@echo "    make setup-node     npm install only"
+	@echo ""
+	@echo "  DEVELOPMENT"
+	@echo "    make dev            Start Next.js dev server (http://localhost:3000)"
+	@echo "    make build          Production build"
+	@echo ""
+	@echo "  DATA PIPELINE - SCRAPING"
+	@echo "    make scrape-all     Run all automated scrapers"
+	@echo "    make scrape-ostra   Extract Ostra Skane artists from PDF"
+	@echo "    make scrape-vskg    Scrape Vastra Skane from vskg.se"
+	@echo "    make scrape-nordvastra  (manual) Nordvastra from konstrundan.se"
+	@echo "    make scrape-mittskane   (manual) Mittskane from konstrundan.com"
+	@echo "    make scrape-sydvastra   (manual) Sydvastra from ksvkonst.se"
+	@echo ""
+	@echo "  DATA PIPELINE - PROCESSING"
+	@echo "    make geocode        Geocode addresses via Google Geocoding API"
+	@echo "    make images         Extract PDF images + scrape website images"
+	@echo ""
+	@echo "  FULL PIPELINE"
+	@echo "    make pipeline       scrape-all + geocode + images"
+	@echo "    make all            setup + pipeline + dev"
+	@echo ""
+	@echo "  CLEANUP"
+	@echo "    make clean          Remove .venv, node_modules, .next"
+	@echo ""
+	@echo "  REGIONS (354 artists total)"
+	@echo "    Ostra Skane    (OSKG)  86 artists  oskg.se"
+	@echo "    Vastra Skane   (VSKG)  76 artists  vskg.se"
+	@echo "    Nordvastra Skane       96 artists  konstrundan.se"
+	@echo "    Mittskane              51 artists  konstrundan.com"
+	@echo "    Sydvastra Skane (KSV)  45 artists  ksvkonst.se"
+	@echo ""
+	@echo "  REQUIREMENTS"
+	@echo "    - Python 3.11+"
+	@echo "    - Node.js 18+"
+	@echo "    - Google Maps API key in .env.local"
+	@echo ""
 
 setup: setup-python setup-node
 	@echo ✅ All dependencies installed
