@@ -19,7 +19,9 @@
     "website": "www.barbrojonasson.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "www"
+    "location": "Barsebäckshamn",
+    "lat": 55.753523,
+    "lng": 12.907479
   },
   {
     "id": 8,
@@ -63,7 +65,9 @@
     "website": "metabraconier.com",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "metabraconier"
+    "location": "metabraconier",
+    "lat": 55.991934,
+    "lng": 13.597783
   },
   {
     "id": 17,
@@ -74,7 +78,9 @@
     "website": "www.bocronqvist.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "LUND"
+    "location": "LUND",
+    "lat": 55.702743,
+    "lng": 13.190073
   },
   {
     "id": 18,
@@ -118,7 +124,9 @@
     "website": null,
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Råby"
+    "location": "Råby",
+    "lat": 56.108047,
+    "lng": 14.509301
   },
   {
     "id": 24,
@@ -140,7 +148,9 @@
     "website": null,
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "www"
+    "location": "Borstahusen",
+    "lat": 55.897444,
+    "lng": 12.806663
   },
   {
     "id": 26,
@@ -151,7 +161,9 @@
     "website": "anna-lenawesterlund.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "anna"
+    "location": "anna",
+    "lat": 56.380595,
+    "lng": 13.489387
   },
   {
     "id": 27,
@@ -173,7 +185,9 @@
     "website": null,
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Lund"
+    "location": "Lund",
+    "lat": 55.704161,
+    "lng": 13.189204
   },
   {
     "id": 31,
@@ -184,7 +198,9 @@
     "website": null,
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Malmö"
+    "location": "Malmö",
+    "lat": 55.60598,
+    "lng": 13.000963
   },
   {
     "id": 32,
@@ -195,7 +211,9 @@
     "website": "malmogallerihelg.se",
     "instagram": "marinasakvarell",
     "address": "Ditt telefonnummer",
-    "location": "Malmö"
+    "location": "Malmö",
+    "lat": 55.606684,
+    "lng": 13.001174
   },
   {
     "id": 33,
@@ -261,7 +279,9 @@
     "website": "www.konstkvarteret.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "https"
+    "location": "Hofterup",
+    "lat": 55.797061,
+    "lng": 12.97951
   },
   {
     "id": 44,
@@ -272,7 +292,9 @@
     "website": "annsticklin.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "annsticklin"
+    "location": "annsticklin",
+    "lat": 55.601432,
+    "lng": 12.999095
   },
   {
     "id": 46,
@@ -305,7 +327,9 @@
     "website": "www.carolinehertz.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "24"
+    "location": "Lund",
+    "lat": 55.705017,
+    "lng": 13.190548
   },
   {
     "id": 53,
@@ -371,7 +395,9 @@
     "website": "www.mirjamekespong.se",
     "instagram": "mirjamekespong.se",
     "address": "Ditt telefonnummer",
-    "location": "87"
+    "location": "Barsebäck",
+    "lat": 55.77496,
+    "lng": 12.955729
   },
   {
     "id": 65,
@@ -382,7 +408,9 @@
     "website": "maclindheart.com",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "maclindheart"
+    "location": "maclindheart",
+    "lat": 55.990474,
+    "lng": 13.593039
   },
   {
     "id": 66,
@@ -426,7 +454,9 @@
     "website": null,
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Kritbruksvägen"
+    "location": "Kritbruksvägen",
+    "lat": 55.586767,
+    "lng": 13.107786
   },
   {
     "id": 71,
@@ -437,7 +467,9 @@
     "website": "www.annanellusatelje.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "www"
+    "location": "Rörum",
+    "lat": 55.632356,
+    "lng": 14.248355
   },
   {
     "id": 72,
@@ -459,7 +491,9 @@
     "website": "www.kajsaodelid.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "83"
+    "location": "Lund",
+    "lat": 55.702497,
+    "lng": 13.192247
   },
   {
     "id": 74,
@@ -492,7 +526,9 @@
     "website": "www.inga-lill.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Saxtorp"
+    "location": "Saxtorp",
+    "lat": 55.840184,
+    "lng": 12.957955
   },
   {
     "id": 78,
@@ -514,7 +550,9 @@
     "website": "www.hermeren.nu",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Lund"
+    "location": "Lund",
+    "lat": 55.706846,
+    "lng": 13.191964
   },
   {
     "id": 83,
@@ -547,7 +585,9 @@
     "website": "kjaerkner.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Västra Skåne"
+    "location": "Malmö",
+    "lat": 55.603778,
+    "lng": 13.000866
   },
   {
     "id": 89,
@@ -558,7 +598,9 @@
     "website": "katarinajohansson.se",
     "instagram": "ateljegetinge1124",
     "address": "Ditt telefonnummer",
-    "location": "katarinajohansson"
+    "location": "katarinajohansson",
+    "lat": 55.990563,
+    "lng": 13.598476
   },
   {
     "id": 90,
@@ -580,7 +622,9 @@
     "website": null,
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Sunnanväg"
+    "location": "Sunnanväg",
+    "lat": 55.691297,
+    "lng": 13.175501
   },
   {
     "id": 95,
@@ -602,7 +646,9 @@
     "website": null,
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Ystadsgatan"
+    "location": "Ystadsgatan",
+    "lat": 55.59292,
+    "lng": 13.017172
   },
   {
     "id": 98,
@@ -613,7 +659,9 @@
     "website": "ateljeskoog.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "ateljeskoog"
+    "location": "Malmö",
+    "lat": 55.606695,
+    "lng": 13.003276
   },
   {
     "id": 101,
@@ -657,7 +705,9 @@
     "website": "www.atelje4.se",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Limhamn"
+    "location": "Limhamn",
+    "lat": 55.574124,
+    "lng": 12.917474
   },
   {
     "id": 109,
@@ -723,7 +773,9 @@
     "website": "lottakvistart.com",
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "lottakvistart"
+    "location": "lottakvistart",
+    "lat": 55.990018,
+    "lng": 13.59353
   },
   {
     "id": 121,
@@ -745,7 +797,9 @@
     "website": null,
     "instagram": null,
     "address": "Ditt telefonnummer",
-    "location": "Koggavägen"
+    "location": "Koggavägen",
+    "lat": 55.756732,
+    "lng": 12.908962
   },
   {
     "id": 123,
@@ -767,7 +821,9 @@
     "website": "www.lexeliotrose.org",
     "instagram": "lexeliotpainter",
     "address": "Ditt telefonnummer",
-    "location": "Västra Skåne"
+    "location": "Studentgatan",
+    "lat": 55.703861,
+    "lng": 13.207413
   },
   {
     "id": 128,
