@@ -10,7 +10,7 @@ import RoutePlanner from "@/components/RoutePlanner";
 import { allArtists } from "@/data/artists";
 import { Artist, RegionId, TechniqueFilter, techniques } from "@/lib/types";
 import { useFavorites } from "@/lib/useFavorites";
-import { useGeolocation, distanceFromUser } from "@/lib/useGeolocation";
+import { useDarkMode } from "@/lib/useDarkMode";
 
 const availableRegions = [
   ...new Set(allArtists.map((a) => a.regionId)),
@@ -25,11 +25,10 @@ export default function Home() {
   const [listOpen, setListOpen] = useState(false);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [routeOpen, setRouteOpen] = useState(false);
-  const [sortByDistance, setSortByDistance] = useState(false);
 
   const { favorites, favoriteCount, toggleFavorite, isFavorite } =
     useFavorites();
-  const { position, loading: geoLoading, requestPosition } = useGeolocation();
+  const { isDark, toggle: toggleDark } = useDarkMode();
 
   const handleRegionToggle = (regionId: RegionId) => {
     setActiveRegions((prev) => {
@@ -39,15 +38,6 @@ export default function Home() {
       }
       return [...prev, regionId];
     });
-  };
-
-  const handleNearMe = () => {
-    if (position) {
-      setSortByDistance(!sortByDistance);
-    } else {
-      requestPosition();
-      setSortByDistance(true);
-    }
   };
 
   const filtered = useMemo(() => {
@@ -71,17 +61,8 @@ export default function Home() {
       return matchesRegion && matchesSearch && matchesFilter;
     });
 
-    // Sort by distance if position available
-    if (sortByDistance && position) {
-      result = [...result].sort(
-        (a, b) =>
-          distanceFromUser(position.lat, position.lng, a.lat, a.lng) -
-          distanceFromUser(position.lat, position.lng, b.lat, b.lng)
-      );
-    }
-
     return result;
-  }, [query, activeFilters, activeRegions, showFavoritesOnly, isFavorite, sortByDistance, position]);
+  }, [query, activeFilters, activeRegions, showFavoritesOnly, isFavorite]);
 
   const favoriteArtists = allArtists.filter((a) =>
     isFavorite(a.regionId, a.id)
@@ -93,6 +74,8 @@ export default function Home() {
         artistCount={filtered.length}
         activeRegions={activeRegions}
         favoriteCount={favoriteCount}
+        isDark={isDark}
+        onToggleDark={toggleDark}
       />
       <SearchBar
         query={query}

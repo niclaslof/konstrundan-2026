@@ -23,7 +23,7 @@ export default function ArtistList({
     <>
       {/* Side panel */}
       <div
-        className={`fixed left-0 top-[76px] md:top-[82px] bottom-0 w-72 md:w-80 bg-panel z-[55] overflow-y-auto transition-transform duration-300 border-r border-stone-200 shadow-[4px_0_16px_rgba(0,0,0,0.1)] ${
+        className={`fixed left-0 top-[68px] md:top-[72px] bottom-0 w-72 md:w-80 bg-panel z-[55] overflow-y-auto transition-transform duration-300 border-r border-stone-200 shadow-[4px_0_16px_rgba(0,0,0,0.1)] ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

@@ -25,40 +25,30 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+/* Dark mode – toggled via .dark class on html */
+html.dark body {
+  background: #0c0a09;
+  color: #e7e5e4;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #d6d3d1;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a29e;
-}
+html.dark .bg-paper { background: #0c0a09 !important; }
+html.dark .bg-panel { background: #1c1917 !important; }
+html.dark .text-ink { color: #e7e5e4 !important; }
+html.dark .text-warm { color: #a8a29e !important; }
+html.dark .bg-tag-bg { background: #292524 !important; }
+html.dark .text-tag-text { color: #d6d3d1 !important; }
+html.dark .border-stone-200 { border-color: #292524 !important; }
+html.dark .border-stone-100 { border-color: #1c1917 !important; }
+html.dark .bg-stone-50 { background: #1c1917 !important; }
 
-/* Dark mode */
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #0c0a09;
-    color: #e7e5e4;
-  }
-  .bg-paper { background: #0c0a09 !important; }
-  .bg-panel { background: #1c1917 !important; }
-  .bg-ink { background: #faf8f5 !important; color: #1c1917 !important; }
-  .text-ink { color: #e7e5e4 !important; }
-  .text-warm { color: #a8a29e !important; }
-  .border-stone-200 { border-color: #292524 !important; }
-  .border-stone-100 { border-color: #1c1917 !important; }
-  .bg-white { background: #1c1917 !important; }
-  .bg-stone-100 { background: #292524 !important; }
-  input { background: #292524 !important; color: #e7e5e4 !important; border-color: #44403c !important; }
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 3px; }
+html.dark ::-webkit-scrollbar-thumb { background: #44403c; }
+
+/* Hide horizontal scrollbar in filter bar */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* Google Maps overrides */
-.gm-style-iw {
-  font-family: var(--font-sans) !important;
-}
+.gm-style-iw { font-family: var(--font-sans) !important; }
