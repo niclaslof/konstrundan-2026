@@ -175,7 +175,7 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist, isFavorite }: Ma
 function UserLocationDot() {
   const map = useMap();
   const markerRef = useRef<google.maps.Marker | null>(null);
-  const [watching, setWatching] = useState(false);
+  const posRef = useRef<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     if (!map || !navigator.geolocation) return;
@@ -183,21 +183,11 @@ function UserLocationDot() {
     const watchId = navigator.geolocation.watchPosition(
       (pos) => {
         const position = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        setWatching(true);
+        posRef.current = position;
 
         if (markerRef.current) {
           markerRef.current.setPosition(position);
         } else {
-          // Blue dot with pulsing ring
-          const dot = document.createElement("div");
-          dot.innerHTML = `
-            <div style="position:relative;width:20px;height:20px">
-              <div style="position:absolute;inset:-6px;border-radius:50%;background:rgba(66,133,244,0.15);animation:pulse 2s ease-out infinite"></div>
-              <div style="width:14px;height:14px;border-radius:50%;background:#4285f4;border:3px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);margin:3px"></div>
-            </div>
-            <style>@keyframes pulse{0%{transform:scale(1);opacity:1}100%{transform:scale(2.5);opacity:0}}</style>
-          `;
-
           markerRef.current = new google.maps.Marker({
             position,
             map,
@@ -226,7 +216,25 @@ function UserLocationDot() {
     };
   }, [map]);
 
-  return null;
+  const centerOnMe = () => {
+    if (map && posRef.current) {
+      map.panTo(posRef.current);
+      map.setZoom(13);
+    }
+  };
+
+  return (
+    <button
+      onClick={centerOnMe}
+      className="fixed bottom-16 right-3 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center cursor-pointer hover:bg-white transition-colors"
+      title="Centrera på min position"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4285f4" strokeWidth="2.5" strokeLinecap="round">
+        <circle cx="12" cy="12" r="3" fill="#4285f4" />
+        <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+      </svg>
+    </button>
+  );
 }
 
 function MapTypeToggle() {
