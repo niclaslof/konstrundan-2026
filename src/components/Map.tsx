@@ -172,6 +172,63 @@ function MarkerLayer({ artists, selectedArtist, onSelectArtist, isFavorite }: Ma
   return null;
 }
 
+function UserLocationDot() {
+  const map = useMap();
+  const markerRef = useRef<google.maps.Marker | null>(null);
+  const [watching, setWatching] = useState(false);
+
+  useEffect(() => {
+    if (!map || !navigator.geolocation) return;
+
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        const position = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        setWatching(true);
+
+        if (markerRef.current) {
+          markerRef.current.setPosition(position);
+        } else {
+          // Blue dot with pulsing ring
+          const dot = document.createElement("div");
+          dot.innerHTML = `
+            <div style="position:relative;width:20px;height:20px">
+              <div style="position:absolute;inset:-6px;border-radius:50%;background:rgba(66,133,244,0.15);animation:pulse 2s ease-out infinite"></div>
+              <div style="width:14px;height:14px;border-radius:50%;background:#4285f4;border:3px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);margin:3px"></div>
+            </div>
+            <style>@keyframes pulse{0%{transform:scale(1);opacity:1}100%{transform:scale(2.5);opacity:0}}</style>
+          `;
+
+          markerRef.current = new google.maps.Marker({
+            position,
+            map,
+            icon: {
+              url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+                `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                  <circle cx="11" cy="11" r="10" fill="rgba(66,133,244,0.2)"/>
+                  <circle cx="11" cy="11" r="6" fill="#4285f4" stroke="white" stroke-width="2.5"/>
+                </svg>`
+              ),
+              scaledSize: new google.maps.Size(22, 22),
+              anchor: new google.maps.Point(11, 11),
+            },
+            zIndex: 999999,
+            clickable: false,
+          });
+        }
+      },
+      () => {},
+      { enableHighAccuracy: true, maximumAge: 5000 }
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+      markerRef.current?.setMap(null);
+    };
+  }, [map]);
+
+  return null;
+}
+
 function MapTypeToggle() {
   const map = useMap();
   const [isSatellite, setIsSatellite] = useState(false);
@@ -254,6 +311,7 @@ export default function MapComponent({ artists, selectedArtist, onSelectArtist, 
               onSelectArtist={onSelectArtist}
               isFavorite={isFavorite}
             />
+            <UserLocationDot />
             <MapTypeToggle />
           </GoogleMap>
         </APIProvider>
