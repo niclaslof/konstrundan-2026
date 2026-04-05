@@ -226,7 +226,7 @@ function UserLocationDot() {
   return (
     <button
       onClick={centerOnMe}
-      className="fixed bottom-16 right-3 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center cursor-pointer hover:bg-white transition-colors"
+      className="fixed bottom-4 left-3 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center cursor-pointer hover:bg-white transition-colors"
       title="Centrera på min position"
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4285f4" strokeWidth="2.5" strokeLinecap="round">
